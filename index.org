@@ -2,7 +2,7 @@ El siguiente es una apunte del curso /Análisis Estático de Programas Lógicos 
 
 - Presentación: [[https://vaucheret.github.io/AILP/ailp.html][HTML]] | [[https://github.com/vaucheret/vaucheret.github.io/tree/932b7f5b158c756c487cac700ba8eb080cf4340d/AILP][Fuentes]]
 - Fuentes de este apunte: [[https://github.com/cnngimenez/apuntes-AILP][Repositorio en Github]]
-- Códigos usados:  [[file:tangled/][Ver directorio ./tangled/]]
+- Códigos usados:  [[https://github.com/cnngimenez/apuntes-AILP/tree/main/tangled][Ver directorio ./tangled/]]
 
 
 https://i.creativecommons.org/l/by-sa/4.0/88x31.png

@@ -4,6 +4,14 @@ El siguiente es una apunte del curso /Análisis Estático de Programas Lógicos 
 - Fuentes de este apunte: [[https://github.com/cnngimenez/apuntes-AILP][Repositorio en Github]]
 - Códigos usados:  [[file:tangled/][Ver directorio ./tangled/]]
 
+
+https://i.creativecommons.org/l/by-sa/4.0/88x31.png
+
+This work is licensed under a [[http://creativecommons.org/licenses/by-sa/4.0/][Creative Commons Attribution-ShareAlike 4.0 International License]].
+
+Este obra está bajo una [[http://creativecommons.org/licenses/by-sa/4.0/][licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional]].
+
+
 * Aserciones
 
 ** Formato

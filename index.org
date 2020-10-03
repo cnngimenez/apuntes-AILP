@@ -3,7 +3,7 @@ El siguiente es una apunte del curso /Análisis Estático de Programas Lógicos 
 - Presentación: [[https://vaucheret.github.io/AILP/ailp.html][HTML]] | [[https://github.com/vaucheret/vaucheret.github.io/tree/932b7f5b158c756c487cac700ba8eb080cf4340d/AILP][Fuentes]]
 - Fuentes de este apunte: [[https://github.com/cnngimenez/apuntes-AILP][Repositorio en Github]]
 - Códigos usados:  [[https://github.com/cnngimenez/apuntes-AILP/tree/main/tangled][Ver directorio ./tangled/]]
-
+- Descargar códigos y fuentes completo: [[https://github.com/cnngimenez/apuntes-AILP/archive/main.zip][ZIP]] (O ir al repositorio de Github).
 
 https://i.creativecommons.org/l/by-sa/4.0/88x31.png
 
@@ -91,10 +91,12 @@ Es equivalente a lo siguiente:
 
 
 ** regtype
+Para utilizar ~regtype~, se debe agregar el módulo ~regtypes~. Más información en: [[info:ciao#Declaring regular types][info:ciao#Declaring regular types]].
+
 Declara como tipos regulares un predicado. En otras palabras, declararía un dominio abstracto. Luego se puede utilizar en otras aserciones para chequear que una varible está en un dominio.
 
 Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para declarar el tipo ~car/1~ y en el entry se declara que C es una lista con dominio en ~car/1~ y S de tipo ~initial/1~
-   
+
 #+BEGIN_SRC prolog
   :- module(aut, _, [assertions, regtypes]).
 
@@ -110,11 +112,18 @@ Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para 
   %% ...
 #+END_SRC
 
-** Check
-CiaoPP trabaja sobre dominios abstractos y no concretos. Para concretos utilizar los testeos de unidad.
 
-Los dominios abstractos se irán creando con nombres parecidos a ~rtNNN~ donde NNN es un número. A menos que se declaren con ~regtype/1~.
+** comp
+Varios de los predicados para ~comp~ están definidos en el módulo ~native_pros~. Es necesario incluirlo en el preámbulo. Más información en: [[info:ciao#Properties which are native to analyzers][info:ciao#Properties which are native to analyzers]]
 
+Algunos predicados para chequeo de computación interesantes son: ~not_fails, no_choicepoints, possibly_fails, fails, non_det, is_det, possibly_nondet, finite_solutions, terminates, exception, no_exception, possible_exceptions~.
+
+* Checking
+CiaoPP trabaja sobre dominios abstractos y no concretos. Por ello, ~test~ no funcionaría si se brindan datos concretos. En ese caso utilizar los testeos de unidad.
+
+Los dominios abstractos se irán creando a medida que sea necesario con nombres de la forma ~rtNNN~ donde NNN es un número. A menos que se declaren con ~regtype/1~.
+
+Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el archivo con los resultados del análisis y el chequeo. 
 
 
 

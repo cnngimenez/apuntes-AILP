@@ -6,4 +6,4 @@
 - Ver apunte : https://cnngimenez.github.io/apuntes-AILP/
 - Presentación de Claudio (original del archivo ailp.org) : [HTML](https://vaucheret.github.io/AILP/ailp.html) | [Fuentes](https://github.com/vaucheret/vaucheret.github.io/tree/932b7f5b158c756c487cac700ba8eb080cf4340d/AILP)
 - Códigos de la presentación: [Ver directorio ./tangled/](https://github.com/cnngimenez/apuntes-AILP/tree/main/tangled)
-- Descargar códigos y fuentes completo: [ZIP](https://github.com/cnngimenez/apuntes-AILP/archive/main.zip).
+- Descargar códigos y fuentes completo: [descargar ZIP completo](https://github.com/cnngimenez/apuntes-AILP/archive/main.zip).

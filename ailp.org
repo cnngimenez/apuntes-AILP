@@ -1,3 +1,4 @@
+#+property: header-args:prolog :comments both :mkdirp yes :padline yes :tangle tangled/codigos.pl
 #+OPTIONS: reveal_center:t reveal_control:t reveal_height:-1
 #+OPTIONS: reveal_history:nil reveal_keyboard:t reveal_overview:t
 #+OPTIONS: reveal_progress:t reveal_rolling_links:nil
@@ -929,7 +930,7 @@ regulares"/. Ejemplos:
 * Analisis
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog :tangle tangled/app.pl
     :- module(app, [app/3], [assertions]).
 
     :- entry app(A,B,C) : (list(A), list(B)).
@@ -955,7 +956,7 @@ regulares"/. Ejemplos:
 ** Analisis
 - Entrada
   #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog :tangle tangled/analisis/qsort.pl
 :- module(qsort, [qsort/2], [assertions]).
 
 :- entry qsort(A,B) : (list(num, A), var(B)).
@@ -1053,8 +1054,8 @@ append([H|X],Y,[H|Z]):- append(X,Y,Z).
 * Debugging
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
-:- module(qsort, [qsort/2], [assertions]).
+    #+BEGIN_SRC prolog :tangle tangled/debugging/qsort1.pl
+:- module(qsort1, [qsort/2], [assertions]).
 
 :- entry qsort(A,B) : (list(num, A), var(B)).
 
@@ -1090,8 +1091,8 @@ append([H|X],Y,[H|Z]):- append(X,Y,Z).
 ** Debugging
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
-:- module(_, [qsort/2], [assertions]).
+    #+BEGIN_SRC prolog :tangle tangled/qsort2.pl
+:- module(qsort2, [qsort/2], [assertions]).
 
 :- entry qsort(A,B) : (list(num, A), var(B)).
 
@@ -1133,7 +1134,7 @@ literal 1 does not succeed!
 ** Debugging
 - Chequear Aserciones
     #+REVEAL_HTML: <div style="font-size: 80%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog :tangle tangled/debugging/qsort3.pl
 :- module(qsort3, [qsort/2], [assertions,regtypes,nativeprops]).
 
 :- entry qsort(A,B) : (list(num, A), var(B)).
@@ -1170,8 +1171,8 @@ append([H|X],Y,[H|Z]):- append(X,Y,Z).
 * Optimización
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
-:- module(_, [dup_first/2], []).
+    #+BEGIN_SRC prolog :tangle tangled/optimizacion/dup.pl
+:- module(dup.pl, [dup_first/2], []).
 
 dup_first([X|Xs], Zs) :-
     app([X], [X|Xs], Zs).
@@ -1184,8 +1185,8 @@ app([X|Xs], Ys, [X|Zs]) :-
 
 - Salida 
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
-:- module(_1,[dup_first/2],[assertions]).
+    #+BEGIN_SRC prolog :tangle tangled/optimizacion/dup_out.pl
+:- module(dup_out.pl,[dup_first/2],[assertions]).
 
 dup_first([A|B],[A,A|B]).
 
@@ -1195,7 +1196,7 @@ dup_first([A|B],[A,A|B]).
 ** Optimización
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 110%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog optimizacion/append.pl
 :- module(append,[appe/3],[assertions] ) .
 
 
@@ -1210,8 +1211,8 @@ append([H|X],Y, [H|Z]):- append(X,Y,Z) .
 
 - Salida 
     #+REVEAL_HTML: <div style="font-size: 110%;">
-    #+BEGIN_SRC prolog
-:- module(_1,[appe/3],[assertions]).
+    #+BEGIN_SRC prolog :tangle tangled/optimizacion/append_out.pl
+:- module(append_out,[appe/3],[assertions]).
 
 :- entry appe(A,B,C).
 
@@ -1228,7 +1229,7 @@ append_1([B|C],A,[B|D]) :-
 ** Optimización
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog :tangle tangled/optimizacion/exponential_ac.pl
 :- module(exponential_ac, [ent/2], [assertions]) .
 
 
@@ -1251,8 +1252,8 @@ exp_ac(Exp,Base,Tmp,Res) :-
 ** Optimizacion
 - Salida 
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
-:- module(_1,[ent/2],[assertions]).
+    #+BEGIN_SRC prolog :tangle tangled/optimizacion/exponential_ac_out.pl
+:- module(exponential_ac_out,[ent/2],[assertions]).
 
 :- entry ent(Base,_A)
    : int(Base).
@@ -1271,7 +1272,7 @@ exp_ac_1(_1,A,A).
 * Certificación
 - Entrada
     #+REVEAL_HTML: <div style="font-size: 130%;">
-    #+BEGIN_SRC prolog
+    #+BEGIN_SRC prolog :tangle tangled/certificacion/multiply.pl
 :- module(multiply,_,[assertions]).
 
 :- entry mmultiply(X,Y,Z): (var(Z),list(X,list(num)),list(Y,list(num))).

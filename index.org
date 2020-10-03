@@ -1,0 +1,172 @@
+El siguiente es una apunte del curso /Análisis Estático de Programas Lógicos Basado en Interpretación Abstracta/.
+
+- Presentación: [[https://vaucheret.github.io/AILP/ailp.html][HTML]] | [[https://github.com/vaucheret/vaucheret.github.io/tree/932b7f5b158c756c487cac700ba8eb080cf4340d/AILP][Fuentes]]
+- Fuentes de este apunte: [[https://github.com/cnngimenez/apuntes-AILP][Repositorio en Github]]
+- Códigos usados:  [[file:tangled/][Ver directorio ./tangled/]]
+
+* Aserciones
+
+** Formato
+Normalmente, el formato de las aserciones en prolog sigue al siguiente estructura:
+
+: :- [estado] [aserción] [pred] [: precond] [=> postcond] [+ propcomp] [# "comentario"]
+
+La tabla ref:tab:aserciones_estados describe los distintos valores del campo ~[estado]~. Éstos pueden ser escritos por el usuario o por CiaoPP como salida del chequeo. Los estados que mayormente se escriben por el usuario es ~trust~ y ~check~.
+
+Los tipos de aserciones que se escriben en el campo ~[aserción]~ están detallados en la tabla ref:tab:aserciones_tipos.
+
+Usualmente, una aserción es interpreta de la siguiente manera:
+
+- ~[pred]~ es la llamada al predicado (/goal/) y debe ser cierta.
+- ~[: precond]~ si existe debe ser verdadera.
+- Entonces, ~[=> postcond]~ debe complirse, en cuyo caso el preprocesador retornará ~true~ o ~checked~ en el ~[estado]~.
+- La propiedad de computaciónd indicada en ~[+ propcomp]~ debe cumplirse.
+
+Si ~[pred]~ o ~[: precond]~ no se cumple, no se chequea la postcondición ni al propiedad de computabilidad. La aserción queda en forma de warning con ~check~ como estado.
+
+#+caption: Estados posibles de la aserción. label:tab:aserciones_estados
+| Estado  | Significado                               |
+|---------+-------------------------------------------|
+| trust   | Ingresada por el usuario,                 |
+|         | confiar en la veracidad de la aserción.   |
+|---------+-------------------------------------------|
+| checked | La aserción fue verificada                |
+|---------+-------------------------------------------|
+| true    | Salida del compilador.                    |
+|---------+-------------------------------------------|
+| false   | Error de compilación                      |
+|---------+-------------------------------------------|
+| check   | Aserción con warnings, chequear aserción. |
+ 
+- AS: Azúcar Sintáctico
+
+#+caption: Tipos de aserciones y su significado. label:tab:aserciones_tipos
+| Aserción | Significado                                      | AS |
+|----------+--------------------------------------------------+----|
+| pred     | Equivalente a calls, success y comp juntos       | sí |
+|          | (dependiendo de los campos completados).         |    |
+|----------+--------------------------------------------------+----|
+| calls    | La llamada del predicado debe satisfacer         |    |
+|          | la precondición indicada.                        |    |
+|----------+--------------------------------------------------+----|
+| entry    | Similar a calls pero declara la llamadas         |    |
+|          | exportadas. Son confiadas por el compilador.     |    |
+|----------+--------------------------------------------------+----|
+| comp     | Toda llamada del predicado que cumpla con la     |    |
+|          | precondición, debe cumplir con la propiedad      |    |
+|          | de la computación dada.                          |    |
+|----------+--------------------------------------------------+----|
+| regtype  | Declara un tipo regular.                         |    |
+|----------+--------------------------------------------------+----|
+| success  | El predicado que cumpla con la precondición      |    |
+|          | y retorne éxito debe verificar la postcondición. |    |
+|----------+--------------------------------------------------+----|
+| doc      | Documentación utilizada por Pldoc                |    |
+|----------+--------------------------------------------------+----|
+| test     | Testeo con instancias. Similar a success.        |    |
+
+Más información en [[info:ciao#The Ciao assertion language][info:ciao#The Ciao assertion language]].
+
+~test~ no se verifica con CiaoPP porque no trabaja con dominios abstractos.
+
+*** Azúcares sintácticos
+
+: pred qsort(A,B) : (list(A), var(B)) => list(B) + not_fails.
+
+Es equivalente a lo siguiente:
+
+#+BEGIN_SRC prolog
+:- calls qsort(A,B) : (list(A), var(B)).
+:- success qsort(A,B) : (list(A), var(B)) => list(B).
+:- comp qsort(A,B) : (list(A) , var(B)) + not_fails.
+#+END_SRC
+
+
+** regtype
+Declara como tipos regulares un predicado. En otras palabras, declararía un dominio abstracto. Luego se puede utilizar en otras aserciones para chequear que una varible está en un dominio.
+
+Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para declarar el tipo ~car/1~ y en el entry se declara que C es una lista con dominio en ~car/1~ y S de tipo ~initial/1~
+   
+#+BEGIN_SRC prolog
+  :- module(aut, _, [assertions, regtypes]).
+
+  :- entry accepts_(S,C) : (initial(S), list(car, C)).
+  :- regtype car/1.
+
+  car(a).
+  car(b).
+
+  %% ...
+  accepts_(State, []) :-
+      final(State).
+  %% ...
+#+END_SRC
+
+** Check
+CiaoPP trabaja sobre dominios abstractos y no concretos. Para concretos utilizar los testeos de unidad.
+
+Los dominios abstractos se irán creando con nombres parecidos a ~rtNNN~ donde NNN es un número. A menos que se declaren con ~regtype/1~.
+
+
+
+
+* Meta     :noexport:
+
+  # ----------------------------------------------------------------------
+  #+TITLE:  Apuntes del Curso Análisis Estático de Programas Lógicos
+  #+AUTHOR: Christian Gimenez
+  #+DATE:   02 oct 2020
+  #+EMAIL:
+  #+DESCRIPTION: 
+  #+KEYWORDS: 
+
+  #+STARTUP: inlineimages hidestars content hideblocks entitiespretty
+  #+STARTUP: indent fninline latexpreview
+
+  #+OPTIONS: H:3 num:t toc:t \n:nil @:t ::t |:t ^:{} -:t f:t *:t <:t
+  #+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+  #+OPTIONS: tex:imagemagick
+
+  #+TODO: TODO(t!) CURRENT(c!) PAUSED(p!) | DONE(d!) CANCELED(C!@)
+
+  # -- Export
+  #+LANGUAGE: en
+  #+LINK_UP:   
+  #+LINK_HOME: 
+  #+EXPORT_SELECT_TAGS: export
+  #+EXPORT_EXCLUDE_TAGS: noexport
+
+  # -- HTML Export
+  #+INFOJS_OPT: view:info toc:t ftoc:t ltoc:t mouse:underline buttons:t path:libs/org-info.js
+  #+HTML_LINK_UP: index.html
+  #+HTML_LINK_HOME: index.html
+  #+XSLT:
+
+  # -- For ox-twbs or HTML Export
+  #+HTML_HEAD: <link href="libs/bootstrap.min.css" rel="stylesheet">
+  # -- -- LaTeX-CSS
+  #+HTML_HEAD: <link href="css/style-org.css" rel="stylesheet">
+
+  #+HTML_HEAD: <script src="libs/jquery.min.js"></script> 
+  #+HTML_HEAD: <meta name="description" content="Apuntes del curso de Análisis Estático Estático de Programas Lógicos. ">
+  #+HTML_HEAD: <meta name="keywords" content="Prolog, Ciao, CiaoPP, Análisis Estático">
+  #+LANGUAGE: es
+
+  # -- LaTeX Export
+  # #+LATEX_CLASS: article
+  # -- -- Tikz
+  # #+LATEX_HEADER: \usepackage{tikz}
+  # #+LATEX_HEADER: \usetikzlibrary{shapes.geometric}
+  # #+LATEX_HEADER: \usetikzlibrary{shapes.symbols}
+  # #+LATEX_HEADER: \usetikzlibrary{positioning}
+  # #+LATEX_HEADER: \usetikzlibrary{trees}
+
+  # #+LATEX_HEADER_EXTRA:
+
+  # Local Variables:
+  # org-hide-emphasis-markers: t
+  # org-use-sub-superscripts: "{}"
+  # fill-column: 80
+  # visual-line-fringe-indicators: t
+  # ispell-local-dictionary: "british"
+  # End:

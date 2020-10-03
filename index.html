@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>Apuntes del Curso Análisis Estático de Programas Lógicos</title>
+<!-- 2020-10-02 vie 23:23 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Christian Gimenez">
+<link href="libs/bootstrap.min.css" rel="stylesheet">
+<link href="css/style-org.css" rel="stylesheet">
+<script src="libs/jquery.min.js"></script>
+<meta name="description" content="Apuntes del curso de Análisis Estático Estático de Programas Lógicos. ">
+<meta name="keywords" content="Prolog, Ciao, CiaoPP, Análisis Estático">
+<style>
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script>
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="container">
+<div class="row"><div class="col-md-3 col-md-push-9"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Aserciones</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. Formato</a>
+<ul class="nav">
+<li><a href="#sec-1-1-1">1.1.1. Azúcares sintácticos</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. regtype</a></li>
+<li><a href="#sec-1-3">1.3. Check</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div><div class="col-md-9 col-md-pull-3"><h1 class="title">Apuntes del Curso Análisis Estático de Programas Lógicos</h1>
+<p>
+El siguiente es una apunte del curso <i>Análisis Estático de Programas Lógicos Basado en Interpretación Abstracta</i>.
+</p>
+
+<ul class="org-ul">
+<li>Presentación: <a href="https://vaucheret.github.io/AILP/ailp.html">HTML</a> | <a href="https://github.com/vaucheret/vaucheret.github.io/tree/932b7f5b158c756c487cac700ba8eb080cf4340d/AILP">Fuentes</a>
+</li>
+<li>Códigos usados:  <a href="tangled/">Ver directorio ./tangled/</a>
+</li>
+</ul>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Aserciones</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Formato</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Normalmente, el formato de las aserciones en prolog sigue al siguiente estructura:
+</p>
+
+<pre class="example">
+:- [estado] [aserción] [pred] [: precond] [=&gt; postcond] [+ propcomp] [# "comentario"]
+</pre>
+
+
+<p>
+La tabla <a href="tab:aserciones_estados">tab:aserciones_estados</a> describe los distintos valores del campo <code>[estado]</code>. Éstos pueden ser escritos por el usuario o por CiaoPP como salida del chequeo. Los estados que mayormente se escriben por el usuario es <code>trust</code> y <code>check</code>.
+</p>
+
+<p>
+Los tipos de aserciones que se escriben en el campo <code>[aserción]</code> están detallados en la tabla <a href="tab:aserciones_tipos">tab:aserciones_tipos</a>.
+</p>
+
+<p>
+Usualmente, una aserción es interpreta de la siguiente manera:
+</p>
+
+<ul class="org-ul">
+<li><code>[pred]</code> es la llamada al predicado (<i>goal</i>) y debe ser cierta.
+</li>
+<li><code>[: precond]</code> si existe debe ser verdadera.
+</li>
+<li>Entonces, <code>[=&gt; postcond]</code> debe complirse, en cuyo caso el preprocesador retornará <code>true</code> o <code>checked</code> en el <code>[estado]</code>.
+</li>
+<li>La propiedad de computaciónd indicada en <code>[+ propcomp]</code> debe cumplirse.
+</li>
+</ul>
+
+<p>
+Si <code>[pred]</code> o <code>[: precond]</code> no se cumple, no se chequea la postcondición ni al propiedad de computabilidad. La aserción queda en forma de warning con <code>check</code> como estado.
+</p>
+
+<table class="table table-striped table-bordered table-hover table-condensed">
+<caption class="t-above"><span class="table-number">Tabla 1</span> Estados posibles de la aserción. <a href="tab:aserciones_estados">tab:aserciones_estados</a></caption>
+
+<colgroup>
+<col  class="left">
+
+<col  class="left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="text-left">Estado</th>
+<th scope="col" class="text-left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">trust</td>
+<td class="text-left">Ingresada por el usuario,</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">confiar en la veracidad de la aserción.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">checked</td>
+<td class="text-left">La aserción fue verificada</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">true</td>
+<td class="text-left">Salida del compilador.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">false</td>
+<td class="text-left">Error de compilación</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">check</td>
+<td class="text-left">Aserción con warnings, chequear aserción.</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li>AS: Azúcar Sintáctico
+</li>
+</ul>
+
+<table class="table table-striped table-bordered table-hover table-condensed">
+<caption class="t-above"><span class="table-number">Tabla 2</span> Tipos de aserciones y su significado. <a href="tab:aserciones_tipos">tab:aserciones_tipos</a></caption>
+
+<colgroup>
+<col  class="left">
+
+<col  class="left">
+
+<col  class="left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="text-left">Aserción</th>
+<th scope="col" class="text-left">Significado</th>
+<th scope="col" class="text-left">AS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">pred</td>
+<td class="text-left">Equivalente a calls, success y comp juntos</td>
+<td class="text-left">sí</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">(dependiendo de los campos completados).</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">calls</td>
+<td class="text-left">La llamada del predicado debe satisfacer</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">la precondición indicada.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">entry</td>
+<td class="text-left">Similar a calls pero declara la llamadas</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">exportadas. Son confiadas por el compilador.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">comp</td>
+<td class="text-left">Toda llamada del predicado que cumpla con la</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">precondición, debe cumplir con la propiedad</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">de la computación dada.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">regtype</td>
+<td class="text-left">Declara un tipo regular.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">success</td>
+<td class="text-left">El predicado que cumpla con la precondición</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="text-left">&#xa0;</td>
+<td class="text-left">y retorne éxito debe verificar la postcondición.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">doc</td>
+<td class="text-left">Documentación utilizada por Pldoc</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="text-left">test</td>
+<td class="text-left">Testeo con instancias. Similar a success.</td>
+<td class="text-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Más información en <a href="ciao#The Ciao assertion language">info:ciao#The Ciao assertion language</a>.
+</p>
+
+<p>
+<code>test</code> no se verifica con CiaoPP porque no trabaja con dominios abstractos.
+</p>
+</div>
+
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Azúcares sintácticos</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<pre class="example">
+pred qsort(A,B) : (list(A), var(B)) =&gt; list(B) + not_fails.
+</pre>
+
+
+<p>
+Es equivalente a lo siguiente:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-prolog">:- calls qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>), var(<span style="color: #D8DEE9;">B</span>)).
+:- success qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>), var(<span style="color: #D8DEE9;">B</span>)) =&gt; list(<span style="color: #D8DEE9;">B</span>).
+:- comp qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>) , var(<span style="color: #D8DEE9;">B</span>)) + not_fails.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> regtype</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Declara como tipos regulares un predicado. En otras palabras, declararía un dominio abstracto. Luego se puede utilizar en otras aserciones para chequear que una varible está en un dominio.
+</p>
+
+<p>
+Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para declarar el tipo <code>car/1</code> y en el entry se declara que C es una lista con dominio en <code>car/1</code> y S de tipo <code>initial/1</code>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-prolog">:- <span style="color: #81A1C1;">module</span>(aut, <span style="color: #D8DEE9;">_</span>, <span style="color: #81A1C1;">[</span>assertions, regtypes<span style="color: #81A1C1;">]</span>).
+
+:- entry accepts_(<span style="color: #D8DEE9;">S</span>,<span style="color: #D8DEE9;">C</span>) : (initial(<span style="color: #D8DEE9;">S</span>), list(car, <span style="color: #D8DEE9;">C</span>)).
+:- regtype <span style="color: #88C0D0;">car/1</span>.
+
+<span style="color: #88C0D0;">car</span>(a).
+<span style="color: #88C0D0;">car</span>(b).
+
+<span style="color: #616e88;">%% </span><span style="color: #616e88;">...</span>
+<span style="color: #88C0D0;">accepts_</span>(<span style="color: #D8DEE9;">State</span>, <span style="color: #81A1C1;">[]</span>) :-
+    final(<span style="color: #D8DEE9;">State</span>).
+<span style="color: #616e88;">%% </span><span style="color: #616e88;">...</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Check</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+CiaoPP trabaja sobre dominios abstractos y no concretos. Para concretos utilizar los testeos de unidad.
+</p>
+
+<p>
+Los dominios abstractos se irán creando con nombres parecidos a <code>rtNNN</code> donde NNN es un número. A menos que se declaren con <code>regtype/1</code>.
+</p>
+</div>
+</div>
+</div>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="date">Fecha: 02 oct 2020</p>
+<p class="author">Autor: Christian Gimenez</p>
+<p class="date">Created: 2020-10-02 vie 23:23</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="http://orgmode.org">Org-mode</a> 9.3.6)</p>
+</div>
+</footer>
+</body>
+</html>

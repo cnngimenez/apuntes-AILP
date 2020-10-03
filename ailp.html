@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Interpretación Abstracta de Programas Logicos</title>
+<meta name="author" content="(Claudio Vaucheret)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="../reveal.js-master/css/reveal.css"/>
+
+<link rel="stylesheet" href="../reveal.js-master/css/theme/league.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '../reveal.js-master/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition=""><h1 class="title">Interpretación Abstracta de Programas Logicos</h1><h2 class="author">Claudio Vaucheret</h2><p class="date">Created: 2020-09-26 sáb 14:57</p>
+</section>
+<section id="table-of-contents">
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#/slide-org633829b">Introducción</a></li>
+<li><a href="#/slide-org2e6163f">Analisis de Programas</a></li>
+<li><a href="#/slide-org427c882">¿Qué es la Interpretación Abstracta?</a></li>
+<li><a href="#/slide-org6474630">Ejemplo: La regla de los signos</a>
+<ul>
+<li><a href="#/slide-org0ad695f">Algunas observaciones:</a></li>
+</ul>
+</li>
+<li><a href="#/slide-orgad1c684">Ejemplo: La regla de los signos (cont.)</a>
+<ul>
+<li><a href="#/slide-org2d110f7">Algunas observaciones:</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org5d119e3">Ejemplo: La regla de los signos (cont.)</a>
+<ul>
+<li><a href="#/slide-orga054d96">suma abstracta</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org85eb9cf">Observaciones Importantes</a></li>
+<li><a href="#/slide-orga38d8e9">Propiedades de la Interpretación Abstracta</a></li>
+<li><a href="#/slide-orge194c5c">Aproximaciones Correctas</a></li>
+<li><a href="#/slide-org2ec9092">Aproximación del significado de un programa</a></li>
+<li><a href="#/slide-org65314bb">Aproximación del significado de un programa (cont.)</a></li>
+<li><a href="#/slide-org95fe9d7">Dominio abstracto y función de concretización</a>
+<ul>
+<li><a href="#/slide-org7115f1b">Ejemplo</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org1470d28">Función de abstracción</a></li>
+<li><a href="#/slide-orgb288a6d">Significado abstracto y seguridad</a></li>
+<li><a href="#/slide-orgc3f47b0">Demostrar propiedades en abstracto</a></li>
+<li><a href="#/slide-org74b4bb0">Semánticas Colectoras</a></li>
+<li><a href="#/slide-orgfb8fdf0">Estructura de Retículo</a></li>
+<li><a href="#/slide-orgbb49b16">Ejemplo: aritmética entera de signos</a></li>
+<li><a href="#/slide-org675c994">Ejemplo: aritmética entera de signos (cont.)</a></li>
+<li><a href="#/slide-org42662e7">El enfoque de la inserción de Galois</a>
+<ul>
+<li><a href="#/slide-orgdbbeea2">La <i>Aproximación segura</i></a></li>
+</ul>
+</li>
+<li><a href="#/slide-org1abc04b">Terminación: condiciones en \(F_\alpha\) y \(D_\alpha\)</a></li>
+<li><a href="#/slide-org2335048">Estructura de Retículos</a></li>
+<li><a href="#/slide-org7c36f48">Terminación: Discusión</a></li>
+<li><a href="#/slide-orga8d3da8">Análisis de programas lógicos</a></li>
+<li><a href="#/slide-org06ccbfd">Caso de Estudio: Semántica de punto fijo</a></li>
+<li><a href="#/slide-orgc775b43">Semántica de punto fijo: Ejemplo</a></li>
+<li><a href="#/slide-org01e13c1">Interpretación abstracta "Bottom up"</a>
+<ul>
+<li><a href="#/slide-org82527c1">Interpretación abstracta "Bottom up" (cont.)</a></li>
+<li><a href="#/slide-org3f09a63">Interpretación abstracta "Bottom up" (cont.)</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org7cf02b4">Ejemplo: simple inferencia de "tipos"</a>
+<ul>
+<li><a href="#/slide-org8c64409">Ejemplo: simple inferencia de "tipos" (cont.)</a></li>
+<li><a href="#/slide-org8517dd6">Ejemplo: simple inferencia de "tipos" (cont.)</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org7f1818e">Análisis <b>bottom up</b> basado en \(T_P\): Discusión</a></li>
+<li><a href="#/slide-org6540bcf">Análisis <b>Top down</b> (resumido)</a></li>
+<li><a href="#/slide-org11e1e3d">Arbol AND-OR abstracto</a></li>
+<li><a href="#/slide-orga43085f">Optimización de Punto Fijo</a></li>
+<li><a href="#/slide-orgc44e2f6">Ciaopp</a></li>
+<li><a href="#/slide-org49c9948">Aserciones</a></li>
+<li><a href="#/slide-orgdff408b">Propiedades del estado de éxito</a></li>
+<li><a href="#/slide-org040022f">Propiedades en la llamada y computación</a></li>
+<li><a href="#/slide-org683f019">Composición de Aserciones</a></li>
+<li><a href="#/slide-org227f1d1">Ejemplo de aserciones compuestas</a></li>
+<li><a href="#/slide-org9e03bcf">Ejemplo de aserciones compuestas (cont.)</a></li>
+<li><a href="#/slide-org0431339">Ejemplo de aserciones compuestas (cont.)</a></li>
+<li><a href="#/slide-org8835d03">Ejemplo de aserciones compuestas (cont.)</a></li>
+<li><a href="#/slide-orgd1c03c9">Tipos Regulares</a></li>
+<li><a href="#/slide-orge332489">Lenguaje de aserciones</a></li>
+<li><a href="#/slide-org2e46afb">Lenguaje de aserciones (cont.)</a></li>
+<li><a href="#/slide-orgcfad213">Ciaopp</a></li>
+<li><a href="#/slide-org96d8301">Analisis</a>
+<ul>
+<li><a href="#/slide-orgc2b5964">Analisis</a></li>
+<li><a href="#/slide-org4a229f4">Analisis</a></li>
+<li><a href="#/slide-org8ea2486">Analisis</a></li>
+<li><a href="#/slide-org0848f79">Analisis</a></li>
+<li><a href="#/slide-orgd490640">Analisis</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org33a17fb">Debugging</a>
+<ul>
+<li><a href="#/slide-orgf28900e">Debugging</a></li>
+<li><a href="#/slide-org8f516d7">Debugging</a></li>
+<li><a href="#/slide-orgf58937b">Debugging</a></li>
+<li><a href="#/slide-org4b9c886">Debugging</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org862a4e1">Optimización</a>
+<ul>
+<li><a href="#/slide-org1e60a73">Optimización</a></li>
+<li><a href="#/slide-orgb4ee56b">Optimización</a></li>
+<li><a href="#/slide-orgacbe89e">Optimizacion</a></li>
+</ul>
+</li>
+<li><a href="#/slide-orge7d87dc">Certificación</a>
+<ul>
+<li><a href="#/slide-org0bc0113">Certificación</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</section>
+
+<section>
+<section id="slide-org633829b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org633829b">Introducción</h2>
+<ul>
+<li class="fragment roll-in">analisis / sintesis de programas (Ciencias de la Computación)</li>
+
+<li class="fragment roll-in">Probar que un programa \(P\) tiene tal propiedad (analisis de programas)</li>
+
+<li class="fragment roll-in">Alternativamente: Derivar propiedades que tiene el programa \(P\)</li>
+
+<li class="fragment roll-in"><p>
+Dado Un programa \(P\), generar un programa \(P'\) que sea:
+</p>
+
+<ul>
+<li>en algún sentido equivalente a P</li>
+
+<li>funcione mejor que \(P\) con respecto a algún criterio</li>
+
+</ul>
+<p>
+(analisis / sintesis de programas)
+</p></li>
+
+<li class="fragment roll-in">Aproximación Estandard:
+<ul>
+<li>identificar que ocurre algún invariante y</li>
+<li>especializar el programa para el caso particular</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org2e6163f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org2e6163f">Analisis de Programas</h2>
+<ul>
+<li class="fragment roll-in">Frecuente en compiladores aunque raramente tratados en modo formal:
+<ul>
+<li>"optimización de código"</li>
+<li>"eliminación de codigo muerto"</li>
+<li>"movimiento de código"</li>
+<li>&#x2026;</li>
+
+</ul></li>
+<li class="fragment roll-in">Interpretación Abstracta provee un marco formal para desarrollar
+herramientas de análisis de programas</li>
+<li class="fragment roll-in">Fase de Análisis + fase de sintesis ≡ Interpretación Abstracta +
+Transformación de Programas</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org427c882" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org427c882">¿Qué es la Interpretación Abstracta?</h2>
+<ul>
+<li class="fragment roll-in"><p>
+Considere detectar que una rama no ocurre: 
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-C"><span style="color: #98fb98;">int</span> <span style="color: #eedd82;">x</span>,<span style="color: #eedd82;">y</span>,<span style="color: #eedd82;">z</span>; <span style="color: #7fffd4;">y</span>:=read(file); <span style="color: #7fffd4;">x</span>:= y * y;
+<span style="color: #00ffff;">if</span> x &gt;= 0 then z := 1 <span style="color: #00ffff;">else</span> z:= 0
+
+</pre>
+</div>
+</div>
+<ul>
+<li>Analisis Exhaustivo en el dominio estandard: no termina</li>
+<li>Razonamiento humano de los programas - Usa abstracciones o
+aproximaciones: signos, ordenes de magnitud, par/impar, &#x2026;</li>
+<li>Idea Básica: usar representaciones <i>aproximadas</i> (generalmente
+finitas) de los objetos computacionales para hacer tratable el
+problema del analisis del flujo del programa</li>
+
+</ul></li>
+<li class="fragment roll-in">Analisis Abstracto es la formalización de esta idea:
+<ul>
+<li>define una semantica no estandard que puede aproximar el
+<i>significado</i> o <i>funcionamiento</i> del programa en un modo finito</li>
+<li>las expresiones son computadas en un dominio (abstracto)
+aproximado en lugar del dominio concreto.</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org6474630" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org6474630">Ejemplo: La regla de los signos</h2>
+<ul>
+<li class="fragment roll-in">Consideremos el dominio \(D = Z\) (enteros)</li>
+<li class="fragment roll-in">y el operador de multiplicación: \(* : Z^2 \to Z\)</li>
+<li class="fragment roll-in">Definimos un <b>dominio abstracto</b>: \(D_\alpha = \{[-],[+]\}\)</li>
+<li class="fragment roll-in"><p>
+y la multiplicación abstracta \(*_\alpha : {D_\alpha}^2 \to D_\alpha\)
+definido por: 
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\(*_\alpha\)</th>
+<th scope="col" class="org-left">\([-]\)</th>
+<th scope="col" class="org-left">\([+]\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\([-]\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([+]\)</td>
+</tr>
+</tbody>
+</table></li>
+<li class="fragment roll-in">Esto nos permite razonar, por ejemplo, que \(y=x^2=x*x\) nunca es
+negativo</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org0ad695f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org0ad695f">Algunas observaciones:</h3>
+<ul>
+<li>si tenemos \(z = x * y\) entonces:
+si \(x,y \in Z\) son aproximados con \(x_\alpha, y_\alpha \in
+    D_\alpha\) entonces \(z \in Z\) es aproximado con \(z_\alpha = x_\alpha * y_\alpha\)</li>
+<li>Es importante formalizar esta noción de aproximación para poder
+probar que un análisis es correcto</li>
+<li>La computación aproximada es generalmente menos precisa pero mas rápida.</li>
+
+</ul>
+
+
+
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgad1c684" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgad1c684">Ejemplo: La regla de los signos (cont.)</h2>
+<ul>
+<li class="fragment roll-in">De nuevo \(D = Z\) (enteros)</li>
+<li class="fragment roll-in">y el operador \(* : Z^2 \to Z\)</li>
+<li class="fragment roll-in">Definimos un <i>mas refinado</i> <b>dominio abstracto</b>: \(D'_\alpha = \{[-],[0],[+]\}\)</li>
+<li class="fragment roll-in"><p>
+y la multiplicación abstracta \(*_\alpha : {D'_\alpha}^2 \to D'_\alpha\)
+definido por: 
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\(*_\alpha\)</th>
+<th scope="col" class="org-left">\([-]\)</th>
+<th scope="col" class="org-left">\([0]\)</th>
+<th scope="col" class="org-left">\([+]\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([-]\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([0]\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([+]\)</td>
+</tr>
+</tbody>
+</table></li>
+<li class="fragment roll-in">Esto nos permite razonar, que \(z=y*(0*x)\) es cero</li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org2d110f7" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org2d110f7">Algunas observaciones:</h3>
+<ul>
+<li>Hay un grado de libertad en definir operadores abstractos y
+dominios diferentes</li>
+<li>El requerimiento mínimo es que sea <b>seguro</b> o <b>correcto</b></li>
+<li>Definiciones "seguras" diferentes llevan a clase de análisis diferentes</li>
+
+</ul>
+
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org5d119e3" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org5d119e3">Ejemplo: La regla de los signos (cont.)</h2>
+<ul>
+<li class="fragment roll-in">De nuevo \(D = Z\) (enteros)</li>
+<li class="fragment roll-in">y el operador de <i>suma</i> \(+ : Z^2 \to Z\)</li>
+<li class="fragment roll-in">No podemos usar: \(D'_\alpha = \{[-],[0],[+]\}\) porque no sabríamos
+como representar el resultado de \([+] +_\alpha [-]\) (i.e. la suma
+abstracta no sería cerrada)</li>
+<li class="fragment roll-in">Un nuevo elemento "\(\top\)" (supremum) que es la aproximación para todo entero</li>
+<li class="fragment roll-in">Nuevo <b>dominio abstracto</b>: \(D''_\alpha = \{[-],[0],[+],\top\}\)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orga054d96" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orga054d96">suma abstracta</h3>
+<ul>
+<li><p>
+\(+_\alpha : {D''_\alpha}^2 \to D''_\alpha\)
+definido por: 
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\(+_\alpha\)</th>
+<th scope="col" class="org-left">\([-]\)</th>
+<th scope="col" class="org-left">\([0]\)</th>
+<th scope="col" class="org-left">\([+]\)</th>
+<th scope="col" class="org-left">\(\top\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\(\top\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([-]\)</td>
+<td class="org-left">\([0]\)</td>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\(\top\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\([+]\)</td>
+<td class="org-left">\(\top\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\(\top\)</td>
+<td class="org-left">\(\top\)</td>
+</tr>
+</tbody>
+</table></li>
+<li>Esto nos permite ahora razonar que \(z=x^2 + y^2\) nunca es negativo</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org85eb9cf" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org85eb9cf">Observaciones Importantes</h2>
+<ul>
+<li class="fragment roll-in">Además de la imprecisión debido a la "tosquedad" o lo "básico" de
+\(D_\alpha\), las versiones abstractas de las operaciones
+(que dependen de  \(D_\alpha\)) pueden introducir mas imprecisión</li>
+<li class="fragment roll-in">Así, la elección del <i>dominio abstracto</i> y la definición de las
+<i>operaciones abstractas</i> son cruciales.</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orga38d8e9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orga38d8e9">Propiedades de la Interpretación Abstracta</h2>
+<ul>
+<li class="fragment roll-in">Requeridas:
+<ul>
+<li>Exactitud - aproximaciones correctas: a causa de que las
+propiedades mas "interesantes" son indecidibles el análisis
+necesariamente tiene que ser aproximado. Queremos asegurarnos de
+que el análisis es "conservador" y se equivoca en el "lado seguro"</li>
+<li>Terminación - la compilación definitivamente debe terminar</li>
+
+</ul></li>
+<li class="fragment roll-in">Deseable - "en la práctica"
+<ul>
+<li>Eficiencia: en la práctica, el tiempo de análisis finito no es
+suficiente: finito y pequeño</li>
+<li>Precisión - de la información recopilada: depende de la idoneidad
+de el dominio abstracto y el nivel de detalle al que el
+procedimiento de interpretación imita la semántica del lenguaje</li>
+<li>Utilidad: determina qué información vale la pena recopilar</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orge194c5c" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orge194c5c">Aproximaciones Correctas</h2>
+<ul>
+<li class="fragment roll-in">Idea básica en aproximación: para alguna propiedad \(p\) queremos mostrar
+      \[\forall x, x \in S \Rightarrow p(x)\] 
+Alternativa: construir un conjunto \(S_a \supseteq S\) y demostrar
+     \[\forall x, x \in S_a \Rightarrow p(x)\] 
+entonces, \(S_a\) es una aproximación segura de \(S\)</li>
+<li class="fragment roll-in">Aproximación de funciones: para alguna propiedad \(p\) queremos mostrar 
+\[\forall x, x \in S \Rightarrow p(F(x))\]</li>
+<li class="fragment roll-in">Una función
+\[G: S \rightarrow S\] es una aproximación segura de \(F\) si
+\[\forall x, x \in S, p(G(x)) \Rightarrow p(F(x))\]</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org2ec9092" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org2ec9092">Aproximación del significado de un programa</h2>
+<ul>
+<li class="fragment roll-in">El significado de un programa \(P\) es un mapeo \(F_P\) de entrada a
+salida, cuyos valores de  entrada y salida \(\in\) a un dominio
+"estándar" \(D\): \[F_P: D \rightarrow D\]</li>
+<li class="fragment roll-in">"Elevemos" este significado para asignar <i>conjuntos</i> de entradas a
+<i>conjuntos</i> de salidas \[F^*_P: \wp(D) \rightarrow \wp(D)\] donde \(\wp(S)\)
+denota el conjunto potencia de S, y \[F_P^*(S) = \{F_P(x) \arrowvert x \in  S\}\]</li>
+<li class="fragment roll-in">Una función \[G: \wp(D) \rightarrow \wp(D)\] es una aproximación segura de
+\(F_P^*\) si  \[\forall S, S \in \wp(D), G(S) \supseteq F_P^*(S)\]</li>
+<li class="fragment roll-in">Las propiedades se pueden demostrar usando \(G\) en lugar de \(F_P^*\)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org65314bb" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org65314bb">Aproximación del significado de un programa (cont.)</h2>
+<ul>
+<li class="fragment roll-in">Para alguna propiedad \(p\) queremos mostrar que para las
+entradas - \(S, p(F_P^*(S))\)</li>
+<li class="fragment roll-in">mostramos que para las entradas \(S_a, p(G(S_a))\)</li>
+<li class="fragment roll-in">Dado que \(G(S_a) \supseteq F_P^*(S_a)\) para las entradas \(S_a, p(F_P^*(S_a))\)
+(Nota: abuso de notación - \(F_P^*\) no funciona con valores abstractos \(S_a\))</li>
+<li class="fragment roll-in">Siempre que \(F_P^*\) sea monótono: \[S_a \supseteq S \Rightarrow F_P^*(S_a) \supseteq F_P^*(S)\]</li>
+<li class="fragment roll-in">Y como \(S_a \supseteq S\), entonces: para las entradas \(S, p(F_P^*(S))\)</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org95fe9d7" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org95fe9d7">Dominio abstracto y función de concretización</h2>
+<ul>
+<li class="fragment roll-in">El dominio \(\wp(D)\) se puede representar mediante un dominio
+"abstracto" \(D_\alpha\) de representaciones finitas de (posiblemente) objetos infinitos en \(\wp(D)\)</li>
+<li class="fragment roll-in">La representación de \(\wp(D)\) por \(D_\alpha\) se expresa mediante una
+función (monótona) llamada función de concretización: \[\gamma :
+  D_\alpha → \wp(D)\] tal que \(\gamma(\lambda) = d\) si \(d\) es el
+elemento más grande (bajo \(\supseteq\)) de \(\wp(D)\) que \(\lambda\)
+describe [\((\wp(D), \supseteq)\) es obviamente una retículo completo]</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org7115f1b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org7115f1b">Ejemplo</h3>
+<ul>
+<li class="fragment roll-in">En el ejemplo de los "signos", con \(D_\alpha =
+  \{[-],[0],[+],\top \}\), \(\gamma\) viene dado por \[
+  \begin{align}
+     \gamma([-]) &= \{x \in Z \arrowvert x < 0  \} \\
+     \gamma([0]) &= \{0\} \\
+     \gamma([+]) &= \{x \in Z \arrowvert x > 0\} \\
+     \gamma(\top) &= Z \\
+     \end{align} \]</li>
+<li class="fragment roll-in">\(\gamma(?) = \emptyset \rightarrow\) definimos \(\bot \arrowvert \gamma(\bot) = \emptyset\)</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org1470d28" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org1470d28">Función de abstracción</h2>
+<p>
+También podemos definir (no estrictamente necesario) una función de
+ abstracción (monótona) \[\alpha : \wp(D) \rightarrow D_\alpha\]
+ \(\alpha(d) = \lambda\) si \(\lambda\) es el elemento "mínimo" de
+ \(D_\alpha\) que describe \(d\) [bajo un orden adecuado definido en los
+ elementos de \(D_\alpha\)] 
+</p>
+
+<p>
+p.ej. en el ejemplo de los "signos", \[
+  \begin{align}
+       \alpha(\{1, 2, 3\}) &= [+] (no \top) \\
+       \alpha(\{- 1, −2, −3\}) &= [-] (no \top) \\
+       \alpha(\{0\}) &= [0] \\
+       \alpha(\{- 1, 0, 1\}) &= \top \\
+     \end{align} \]
+  <img src="alphagamma2.png" alt="alphagamma2.png">
+</p>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgb288a6d" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgb288a6d">Significado abstracto y seguridad</h2>
+<ul>
+<li>Ahora podemos definir una función de significado abstracto como
+\[F_\alpha : D_\alpha \rightarrow D_\alpha\] que es segura si
+\[\forall \lambda, \lambda \in D_\alpha, \gamma(F_\alpha(\lambda))
+  \supseteq F^*_P(\gamma(\lambda))\]
+           <img src="absmean2.png" alt="absmean2.png"></li>
+<li>Entonces podemos probar una propiedad de la salida de una clase
+dada de entradas, probando que todos los
+elementos de \(\gamma(F_\alpha(\lambda))\) tienen tal propiedad</li>
+<li>P.ej. puede demostrarse, una propiedad como "si este programa toma
+un número positivo producirá un número negativo como salida"</li>
+
+</ul>
+
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgc3f47b0" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgc3f47b0">Demostrar propiedades en abstracto</h2>
+<ul>
+<li class="fragment roll-in">Generando \(F_\alpha\):
+<ul>
+<li>\(F_P\) obtenido del programa y la semántica predefinida de
+operadores \((x + z) ∗ 3\), \(F_P = (x + z) ∗ 3\)</li>
+<li>Análisis automático: \(F_\alpha\) debería obtenerse del programa y
+la semántica de operadores abstractos (propiedades compositivas)
+\(\{odd, even, +_\alpha, ∗_\alpha\} \Rightarrow F_\alpha = (x +_\alpha z) ∗_\alpha odd\)</li>
+
+</ul></li>
+<li class="fragment roll-in">"Si este programa toma un número positivo, producirá un número
+negativo como salida"</li>
+
+</ul>
+<ul>
+<li class="fragment roll-in">\(P = (y := x ∗ −3)\), entrada \(x\), salida \(y\)</li>
+<li class="fragment roll-in">\(F_P = x ∗ −3\)</li>
+<li class="fragment roll-in">\(F_\alpha = x ∗_\alpha [-]\)</li>
+<li class="fragment roll-in">\(F_\alpha([+]) = [+] ∗_\alpha [-] = [-]\)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org74b4bb0" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org74b4bb0">Semánticas Colectoras</h2>
+<ul>
+<li class="fragment roll-in">La semántica de "entrada-salida" es a menudo demasiado tosca para un
+análisis útil: información sobre el "Estado" en los puntos de
+programa generalmente requieren \(\to\) "semánticas extendidas"</li>
+<li class="fragment roll-in">Los puntos del programa se pueden alcanzar muchas veces, desde
+diferentes puntos y en diferentes "Estados" \(\to\) "semanticas
+colectoras" 
+   \[\{x> 3\} y := x ∗ −3 \{y < −9 \} \mbox{ o } \{x < −3\} y := x ∗ −3 \{y > 9 \}\] 
+   \[\{x = [+]\} y := x ∗ −3 \{y = [-]\} \mbox{ o } \{x = [-]\} y := x ∗ −3 \{y = [+]\}\]</li>
+<li class="fragment roll-in">El análisis a menudo calcula una colección de estados abstractos
+para un punto de programa.  \[\{x = \{[+], [-]\}\} y := x ∗ −3 \{y = \{[-], [+]\}\}\]</li>
+<li class="fragment roll-in">A menudo, es más eficiente "resumir" estados en uno que ofrezca la
+mejor descripción \(\to\)  estructura de retículo en un dominio abstracto \[\{x = \sqcup \{[+], [-]\}\} y := x ∗ −3 \{y = \sqcup \{[-], [+]\}\}\]</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgfb8fdf0" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgfb8fdf0">Estructura de Retículo</h2>
+<ul>
+<li class="fragment roll-in">El ordenamiento en \(\wp(D), \subseteq\), induce un ordenamiento en
+\(D_\alpha, \leq_\alpha\) ("se aproxima mejor") Por ejemplo, podemos
+elegir \(\alpha(\{1, 2, 3\}) = [+] \mbox{ o } \alpha(\{1, 2, 3\}) =
+  \top\), pero \(\gamma([+]) = \{x \in Z \arrowvert x > 0\} \mbox{ y }
+  \gamma(\top) = Z\), y dado que \(\{x \in Z \arrowvert x > 0\}
+  \subseteq Z\) tenemos  \([+] \leq_\alpha \top\), es decir, \([+]\) se
+aproxima mejor que \(\top\), es mas preciso.</li>
+<li class="fragment roll-in">Generalmente se requiere que \((D_\alpha, \leq_\alpha)\) sea una retículo completo</li>
+<li class="fragment roll-in">Por lo tanto, para todo \(S \subseteq D_\alpha\) existe un único
+mínimo límite superior \(\sqcup S \in D_\alpha\), es decir, tal que
+<ul>
+<li>\(\forall \lambda_S \in S, \lambda_S \leq_\alpha \sqcup S\)</li>
+<li>\((\forall \lambda_S \in S, \lambda_S \leq_\alpha \lambda) \Rightarrow \sqcup S \leq_\alpha \lambda\)</li>
+
+</ul></li>
+<li class="fragment roll-in">Intuición: dado un conjunto de aproximaciones del "estado actual" en
+un punto dado en un programa, para asegurarse de que sea la mejor
+descripción "general" para el punto:
+<ul>
+<li>\(\sqcup S\) se aproxima a <i>todos</i> los elementos de \(S\)</li>
+<li>\(\sqcup S\) es la mejor aproximación en \(D_\alpha\)</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgbb49b16" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgbb49b16">Ejemplo: aritmética entera de signos</h2>
+<ul>
+<li class="fragment roll-in">Consideramos \(D_\alpha = \{[-], [0], [+],\top\}\)</li>
+
+</ul>
+<ul>
+<li class="fragment roll-in">Agregamos \(\bot\) (infimum) para que \(\alpha(\emptyset)\) exista y
+para tener una retículo completo: \(D_\alpha = \{\bot, [-], [0],
+    [+], \top\}\)</li>
+<li class="fragment roll-in">(Intuición: representa un punto del programa que nunca será alcanzado)</li>
+<li class="fragment roll-in">La función de concretización debe ampliarse con \[\gamma(\bot) =
+    \emptyset\]</li>
+<li class="fragment roll-in">El reticulo es:
+<img src="reticulo2.png" alt="reticulo2.png"></li>
+<li class="fragment roll-in">\(\sqcup\{[+],[-]\} = \sqcup\{[-],[+]\} = \top\)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org675c994" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org675c994">Ejemplo: aritmética entera de signos (cont.)</h2>
+<ul>
+<li>Para hacer \(t\) mas significativo, consideramos \(D_\alpha =
+  \{\bot,[-],[0^-],[0],[0^+],[+],\top\}\)</li>
+
+</ul>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">\(\gamma(\bot)\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(\emptyset\)</td>
+<td class="org-left">\(\gamma(\top)\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(Z\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">\(\gamma([-])\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(\{x \in Z \arrowvert x < 0 \}\)</td>
+<td class="org-left">\(\gamma([+])\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(\{x \in Z \arrowvert x > 0 \}\)</td>
+<td class="org-left">\(\gamma([0]) = \{0\}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">\(\gamma([0^-])\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(\{x \in Z \arrowvert x \leq 0 \}\)</td>
+<td class="org-left">\(\gamma([0^+])\)</td>
+<td class="org-left">\(=\)</td>
+<td class="org-left">\(\{x \in Z \arrowvert x \geq 0 \}\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>El reticulo es: <img src="reticext2.png" alt="reticext2.png"></li>
+<li>\(\sqcup\{[-],[0]\} = [0^-]\) representa con precisión un punto del programa donde una variable puede ser negativa o cero</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org42662e7" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org42662e7">El enfoque de la inserción de Galois</h2>
+<ul>
+<li>A continuación, nos referiremos a \(\wp(D)\) simplemente como \(D\)</li>
+<li>Las semánticas (colectoras) de los programas a menudo son dadas por
+\(lfp(F)\) (el mínimo \(S\) tal que \(S = F(S)\), Siendo \(F\) la función
+semántica dependiente del programa en \(D\))</li>
+<li>Por lo tanto, necesitamos relacionar este punto fijo con (el de) la
+función semántica aproximada \(F_\alpha\) (que se aproxima a \(F\) y
+opera sobre los elementos de un dominio abstracto \(D_\alpha\))</li>
+<li>Suponga: \(D\) y \(D_\alpha\) son retículos completos; \(\gamma :
+  D_\alpha \rightarrow D\) y \(\alpha : D \rightarrow D_\alpha\) son
+funciones monotónicas. La estructura \((D_\alpha, \gamma, D, \alpha)\)
+se denomina <i>inserción de Galois</i> si:
+<ul>
+<li>\(\forall \lambda \in D_\alpha . \lambda = \alpha(\gamma(\lambda))\)</li>
+<li>\(\forall d \in D . d \subseteq \gamma(\alpha(d))\)</li>
+
+</ul></li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgdbbeea2" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgdbbeea2">La <i>Aproximación segura</i></h3>
+<ul>
+<li>definida ahora en términos de una
+inserción de Galois: Sea una inserción de Galois \((D_\alpha,
+  \gamma,D, \alpha), \lambda \in D_\alpha\) aproxima en forma segura a
+\(d \in D\)  ssi \(d \subseteq \gamma(\lambda)\)</li>
+<li>Teorema fundamental [Cousot]: Dada una inserción de Galois
+\((D_\alpha, \gamma, D, \alpha)\) y dos  funciones (monótonas) \(F: D
+  \rightarrow D\) y \(F_\alpha: D_\alpha \rightarrow D_\alpha\) entonces
+si \(F_\alpha\) es una aproximación de \(F\), \(lfp(F_\alpha)\) es una
+aproximación de \(lfp(F)\)</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org1abc04b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org1abc04b">Terminación: condiciones en \(F_\alpha\) y \(D_\alpha\)</h2>
+<ul>
+<li class="fragment roll-in">La pregunta es si \(lfp(F_\alpha)\) es finitamente computable</li>
+<li class="fragment roll-in">El operador abstracto \(F_\alpha\) opera sobre los elementos de un
+dominio abstracto \(D_\alpha\), que hemos requerido que sea un
+retículo completo, y \(F_\alpha\) es monótona, por lo tanto
+\[lfp(F_\alpha) = F_\alpha \uparrow n\] para algún \(n\) que nos
+gustaría sea finito (es decir, nos gustaría que la secuencia de Kleene fuera finita)</li>
+<li class="fragment roll-in">Recordando las características de los puntos fijos en retículos, la
+secuencia de Kleene será finito en casos que incluyen:
+<ul>
+<li>\(D_\alpha\) es finito</li>
+<li>\(D_\alpha\) es cadena ascendente finita</li>
+
+</ul></li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org2335048" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org2335048">Estructura de Retículos</h2>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">finito</td>
+<td class="org-left">cadena finita ascendente</td>
+</tr>
+
+<tr>
+<td class="org-left"><img src="finito2.png" alt="finito2.png"></td>
+<td class="org-left"><img src="chain2.png" alt="chain2.png"></td>
+</tr>
+
+<tr>
+<td class="org-left">finito en profundidad</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><img src="finitedepht2.png" alt="finitedepht2.png"></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org7c36f48" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org7c36f48">Terminación: Discusión</h2>
+<ul>
+<li class="fragment roll-in">Demostrar la monotonicidad de \(F_\alpha\) puede ser más difícil que
+mostrar que \(D_\alpha\) cumple con las condiciones de finitud</li>
+<li class="fragment roll-in">Puede haber un \(F_\alpha\) que termina incluso si no se cumplen las condiciones</li>
+<li class="fragment roll-in">Las condiciones también se relajan restringiendo la clase de
+programas (por ejemplo, los programas no recursivos presentan pocas dificultades, aunque apenas son interesantes)</li>
+<li class="fragment roll-in">En algunos casos, una aproximación desde arriba (\(gfp(F_\alpha)\)) también puede ser interesante</li>
+<li class="fragment roll-in">Existen otras alternativas a la finitud: profundidad acotada
+dinámica, etc. (Ver: widening y narrowing)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orga8d3da8" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orga8d3da8">Análisis de programas lógicos</h2>
+<ul>
+<li class="fragment roll-in">¿Qué semántica?
+<ul>
+<li>Semántica declarativa: relacionada a qué es una consecuencia del programa
+<ul>
+<li>Semántica de la teoría de modelos mínimos</li>
+<li>Semántica de punto fijo (basada en el operador \(T_P\))
+(cf. estilo de base de datos, evaluación bottom-up )</li>
+
+</ul></li>
+<li>Semántica operativa: cercana al comportamiento del programa
+<ul>
+<li>Basado en resolución SLD (conjuntos éxitosos)</li>
+<li>Denotacional</li>
+<li>Puede cubrir posibilidades distintas a SLD: reactivo, paralelo, &#x2026;</li>
+
+</ul></li>
+
+</ul></li>
+<li class="fragment roll-in">Los análisis basados en semántica declarativa a menudo se denominan análisis <b>bottom up</b></li>
+<li class="fragment roll-in">Los análisis basados en la semántica operativa (de arriba hacia
+abajo) a menudo se denominan Análisis <b>top down</b></li>
+<li class="fragment roll-in">Además, casos intermedios (generalmente logrados mediante la
+transformación de programas)</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org06ccbfd" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org06ccbfd">Caso de Estudio: Semántica de punto fijo</h2>
+<ul>
+<li class="fragment roll-in">Dado el lenguaje de primer orden \(L\) asociado con un programa \(P\)
+dado, el universo de Herbrand (\(U\)) es el conjunto de todos los
+términos básicos de \(L\).</li>
+<li class="fragment roll-in">La Base de Herbrand (\(B\)) es el conjunto de todos los átomos
+instanciados (<i>ground</i>) de \(L\).</li>
+<li class="fragment roll-in">Una <i>interpretación de Herbrand</i> es un subconjunto de \(B\). \(I\) es el
+conjunto de todas las interpretaciones de Herbrand (\(\wp(B)\))</li>
+<li class="fragment roll-in">Un <i>modelo de Herbrand</i> es una interpretación de Herbrand que contiene
+todos las consecuencias del programa.</li>
+<li class="fragment roll-in">El operador de consecuencia inmediata (\(T_P\)) es un mapeo \(T_P : I
+  \rightarrow I\) definido por: \[T_P(M) = \{h \in B \vert \exists C
+  \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots,
+  b_n \in M\}\] (en particular, si (\(a \leftarrow\)) &isin; \(P\), entonces \(ground(a) \subseteq T_P(M)\), para cada \(M\)).</li>
+<li class="fragment roll-in">\(T_P\) es monótono, por lo que tiene un minimo punto fijo \(lfp(T_P)\)
+que se puede obtener como \(T_P \uparrow \omega\) comenzando desde el
+elemento inferior del retículo (la interpretación vacía, \(\emptyset\)).</li>
+<li class="fragment roll-in">(Teorema de caracterización) [Van Emden y Kowalski]: El menor modelo de Herbrand \(P\), \(H\) es \(lfp(T_P)\)</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgc775b43" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgc775b43">Semántica de punto fijo: Ejemplo</h2>
+<p>
+\(P = \{ p(f(X)) \leftarrow p(X). \\
+        p(a). q(a). q(b). \}\)
+</p>
+
+<div>
+\begin{align}
+U &= \{ a,b,f(a),f(b),f(f(a)),f(f(b)),\ldots \} \\
+
+B &= \{ p(a),p(b),q(a),q(b),p(f(a)),p(f(b)),p(f(f(a))), \\ 
+     p(f(f(b))), q(f(a))\ldots  \} \\
+
+I &= \mbox{ todos los subconjuntos de } B \\
+
+H &= \{ q(a), q(b), p(a), p(f(a)), p(f(f(a))), \ldots \} \\
+\end{align}      
+
+</div>
+
+<div>
+\begin{align}
+T_P \uparrow 0 &= \{ p(a),q(a),q(b) \}\\
+
+T_P \uparrow 1 &= \{ p(a),q(a),q(b),p(f(a)) \} \\
+
+T_P \uparrow 2 &= \{ p(a),q(a),q(b),p(f(a)),p(f(f(a))) \} \\
+
+\ldots \\
+
+T_P \uparrow \omega &= H \\
+\end{align}      
+
+</div>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org01e13c1" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org01e13c1">Interpretación abstracta "Bottom up"</h2>
+<ul>
+<li>Encuentra una aproximación de \(H\) al aproximar \(lfp(T_P)\)</li>
+<li>Aplicamos interpretación abstracta:
+<ul>
+<li>Dominio: \(I^\alpha\), tal que elementos de \(I^\alpha\) son
+aproximaciones de elementos de \(I = \wp(B)\).</li>
+<li>Función de concretización: \(\gamma: I^\alpha \rightarrow I\)</li>
+<li>Función de abstracción: \(\alpha: I \rightarrow I^\alpha\)</li>
+<li>Operador Abstracto: versión abstracta del operador \(T_P\)
+\(T^\alpha_P : I^\alpha \rightarrow I^\alpha\)</li>
+
+</ul></li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org82527c1" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org82527c1">Interpretación abstracta "Bottom up" (cont.)</h3>
+<ul>
+<li>Aplicamos interpretación abstracta:
+<ul>
+<li>Exactitud:
+<ul>
+<li>\((I^\alpha, \gamma, I, \alpha)\) debe ser una inserción de
+Galois, es decir, \(I^\alpha\) retículo completo y debería
+aproximar a \(I: \forall M \in I, \gamma(\alpha(M)) \supseteq M\)</li>
+<li>\(T^\alpha_P\) aproximación segura de \(T_P\), es decir, \(\forall d,
+      d \in  I^\alpha, \gamma(T^\alpha_P(d)) \supseteq T_P(\gamma(d))\)</li>
+
+</ul></li>
+<li>Terminación:
+<ul>
+<li>\(T^\alpha_P\) es monótono.</li>
+<li>\(I^\alpha\) (al menos) cadena ascendente finita.</li>
+
+</ul></li>
+
+</ul></li>
+<li>Entonces, \(H^\alpha = lfp(T^\alpha_P) = T^\alpha_P \uparrow n\) se
+obtendrá en un número finito de pasos \(n\) y \(H^\alpha\) se aproximará a \(H\).</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org3f09a63" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org3f09a63">Interpretación abstracta "Bottom up" (cont.)</h3>
+
+<figure>
+<img src="bottomup2.png" alt="bottomup2.png">
+
+</figure>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org7cf02b4" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org7cf02b4">Ejemplo: simple inferencia de "tipos"</h2>
+<ul>
+<li>Problema de "inferencia de tipo" mínimal [Sondergaard]: Aproximación
+de qué predicados están en \(H\)</li>
+<li>\(pred(a):\) denota el símbolo de predicado de un átomo \(a\)</li>
+<li>\(B^\alpha = S\) (conjunto de símbolos de predicado en un programa
+\(P\)) Entonces \(I^\alpha = \wp(S)\), lo llamamos \(S^*\)</li>
+<li>Función de concretización:
+<ul>
+<li>\(\gamma: S^* \rightarrow I\)</li>
+<li>\(\gamma(D) = \{a \in B | pred(a) \in D \}\)</li>
+
+</ul></li>
+<li>Función de abstracción:
+<ul>
+<li>\(\alpha: I \rightarrow S^*\)</li>
+<li>\(\alpha(M) = \{p \in S | \exists a \in M, pred(a) = p \}\)</li>
+
+</ul></li>
+<li>\((S^*, \gamma, I, \alpha)\) es una inserción de Galois.</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org8c64409" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org8c64409">Ejemplo: simple inferencia de "tipos" (cont.)</h3>
+<ul>
+<li>Versión abstracta de \(T_P\) (después de alguna simplificación): \[T_P
+  \alpha: S^* \rightarrow S^*\]</li>
+
+</ul>
+
+<p>
+\(T^\alpha_P(D) = \{p \in S | \exists C \in P, 
+                     C = h \rightarrow b_1, \ldots, b_n, \\
+                     pred(h) \leftarrow pred(b_1), \ldots , pred(b_n)
+                     \equiv p \leftarrow p_1,\ldots , p_n, \\
+                     \mbox{ y } p_1,\ldots , p_n \in D\}\)
+</p>
+<ul>
+<li>\(S^*\) finito (número finito de símbolos de predicado en el programa)
+y \(T^\alpha_P\) monótona \(\to\) El análisis terminará en un número
+finito de pasos \(n\) y \(H^\alpha = T^\alpha_P \uparrow n\) se aproxima a \(H\).</li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org8517dd6" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org8517dd6">Ejemplo: simple inferencia de "tipos" (cont.)</h3>
+<ul>
+<li>Ejemplo:</li>
+
+</ul>
+
+<p>
+\[P = \{p(f(X)) \leftarrow p(X). 
+    p(a). 
+    r(X) ← t(X,Y). 
+    q(a). 
+    q(b). \}\]
+</p>
+
+<p>
+\[P_\alpha = \{p \leftarrow p. 
+    p. 
+    r ← t. 
+    q.\} \]
+</p>
+
+<ul>
+<li>\(S = \{p/1, q/1, r/1, t/2\}\)</li>
+
+<li>Abstracción: \(\alpha(\{p(a), p(b), q(a)\}) = \{p/1, q/1\}\)</li>
+
+<li>Concretización:</li>
+
+</ul>
+<div>
+\begin{align}
+\gamma(\{p/1, q/1\}) &= \{A \in B | pred(A) = p/1 \vee pred(A) = q/1\} \\
+&= \{p(a), p(b), p(f(a)), p(f(b)),\ldots, q(a), q(b), q(f(a)),\ldots \} \\
+\end{align}
+
+</div>
+
+<ul>
+<li>Análisis:</li>
+
+</ul>
+<p>
+\(T^\alpha_P \uparrow 0 = T^\alpha_P(\emptyset) = {p / 1, q / 1}\) <br>
+\(T^\alpha_P \uparrow 1 = T^\alpha_P(\{p/1, q/1\}) = \{p/1, q/1\} = T^\alpha_P \uparrow 0 = H^\alpha\)
+</p>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org7f1818e" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org7f1818e">Análisis <b>bottom up</b> basado en \(T_P\): Discusión</h2>
+<ul>
+<li>Ventajas:
+<ul>
+<li>Simple y elegante. Basado en la semántica declarativa de punto fijo</li>
+<li>General: resultados independientes de la consulta</li>
+
+</ul></li>
+<li>Desventajas:
+<ul>
+<li>Información solo sobre "salida del procedimiento". Normalmente se
+necesita información en varios puntos del programa en la compilación, por ejemplo, "patrones de llamada"</li>
+<li>La “variable lógica” no es observada (usa datos
+instanciados). Información sobre estado de instanciación,
+sustituciones, etc. a menudo necesarios en la compilación</li>
+<li>No dirigido a consultas: analiza el programa completo, no la parte
+(y los modos) que corresponden al uso "normal" (expresado a través
+de una consulta)</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org6540bcf" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org6540bcf">Análisis <b>Top down</b> (resumido)</h2>
+<ul>
+<li class="fragment roll-in">Definir una semántica concreta extendida (recolectora), derivada de
+la resolución SLD, haciendo observable la información relevante.</li>
+<li class="fragment roll-in">Dominio abstracto: generalmente "sustituciones abstractas".</li>
+<li class="fragment roll-in">Operaciones abstractas: unificación, composición, proyección, extensión, &#x2026;</li>
+<li class="fragment roll-in">Función semántica abstracta: toma una forma de consulta (abstracción
+del objetivo inicial o conjunto de metas iniciales) y el programa y
+devuelve descripciones abstractas de la sustituciones en puntos relevantes del programa.</li>
+<li class="fragment roll-in">Las variables complican las cosas:
+<ul>
+<li>corrección (debido al aliasing),</li>
+<li>terminación (fusión de información relacionada con aliasing)</li>
+
+</ul></li>
+<li class="fragment roll-in">Las variables lógicas son, de hecho, punteros (que se comportan
+bien): 
+X = tree(N,L,R),L = nill, Y = N, Y = 3, &#x2026;</li>
+
+<li class="fragment roll-in">esto hace que el análisis de programas lógicos sea muy interesante (y bastante relevante para otros paradigmas).</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org11e1e3d" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org11e1e3d">Arbol AND-OR abstracto</h2>
+<ul>
+<li>Exploración del árbol <code>?- p.   h:- p1, ... pn.</code>
+<img src="arbolandor2.png" alt="arbolandor2.png"></li>
+<li>Operacons Basicas:
+<ul>
+<li>Procedure entry: de \(\lambda_{call}\) obtiene \(\beta1_{entry}\)</li>
+<li>Entry-to-exit (b): de \(\beta1_{entry}\) obtiene \(\beta1_{exit}\)</li>
+<li>Clause entry: de \(\beta1_{entry}\) obtiene \(\lambda_1\)     (y clause exit)</li>
+<li>Body traversal: de \(\lambda_1\) obtiene \(\lambda_{n+1}\)  (iterativamente aplicando (a))</li>
+<li>Procedure exit: de (each or all of the) \(\beta{i}_{exit}\) obtiene \(\lambda_{success}\)</li>
+
+</ul></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orga43085f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orga43085f">Optimización de Punto Fijo</h2>
+<ul>
+<li>Punto fijo es requerido solo en los predicados recursivos:</li>
+
+</ul>
+
+<figure>
+<img src="arbolrec2.png" alt="arbolrec2.png">
+
+</figure>
+<ul>
+<li>Recursivo simple (a)</li>
+<li>Mutuamente Recursivos (b)
+ "Usa la sustitución de exito actual e itera hasta que el punto fijo
+es alcanzado"</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgc44e2f6" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgc44e2f6">Ciaopp</h2>
+<ul>
+<li>Entrada 
+<ul>
+<li>Programas Lógicos</li>
+<li>aserciones y extensiones sintácticas (opcionalmente)</li>
+
+</ul></li>
+<li>Salida
+<ul>
+<li>Mensajes de Errores</li>
+<li>Programa Transformado con:
+<ul>
+<li>Resultados de analisis (como aserciones)</li>
+<li>Resultados de chequeo estático de aserciones</li>
+<li>Aserciones de chequeo en tiempo de ejecución</li>
+<li>Optimizaciones (especialización, paralelización, etc).</li>
+
+</ul></li>
+
+</ul></li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org49c9948" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org49c9948">Aserciones</h2>
+<ul>
+<li>estado de las aserciones
+<ul>
+<li><code>check</code>  (default) &#x2013; Es la semántica intentada, para ser
+chequeada, es la especificación del programa, ingresada por el usuario.</li>
+<li><code>trust</code> &#x2013; semántica real, ingresada por el usuario y creída por
+el compilador (es una guía).</li>
+<li><code>true</code> o <code>false</code> &#x2013; semántica real, salida del compilador.</li>
+<li><code>checked</code> &#x2013; validación: es un <code>check</code> que ha sido probado. (igual
+a <code>true</code>).</li>
+
+</ul></li>
+<li><p>
+ejemplo
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- trust pred is(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>) =&gt; (num(<span style="color: #eedd82;">X</span>),numexpr(<span style="color: #eedd82;">Y</span>)).
+
+:- check pred <span style="color: #87cefa;">p/2</span> : list(int) * var =&gt; list(int) * int.
+:- modedef +<span style="color: #eedd82;">X</span> : nonvar(<span style="color: #eedd82;">X</span>).
+:- check pred sortints(+<span style="color: #eedd82;">L</span>,-<span style="color: #eedd82;">SL</span>) :: list(int) * list(int) + sorted(<span style="color: #eedd82;">SL</span>)
+                               # <span style="color: #ffa07a;">"@var{SL} has same elements as @var{L}."</span>.
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgdff408b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgdff408b">Propiedades del estado de éxito</h2>
+<ul>
+<li class="fragment roll-in"><p>
+Propiedades del estado de <b>éxito</b>.  Son similiares en naturaleza a
+las <i>postcondiciones</i> usadas en verificación de programas
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- success <span style="color: #eedd82;">Goal</span> =&gt; <span style="color: #eedd82;">Postcond</span>.
+</pre>
+</div>
+</div>
+<p>
+ debe ser interpretada como "para toda llamada de la forma <code>Goal</code> que
+tiene éxito, al momento del éxito <code>Postcond</code> debería ser verdadero".
+</p></li>
+
+<li class="fragment roll-in"><p>
+Restricción de las aserciones a un subconjunto de las llamadas
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- success <span style="color: #eedd82;">Goal</span> : <span style="color: #eedd82;">Precond</span> =&gt; <span style="color: #eedd82;">Postcond</span>.
+</pre>
+</div>
+</div>
+<p>
+ debe ser interpretada como "para toda llamada de la forma <code>Goal</code>
+para la cual <code>Predcond</code> ocurre, si la llamada 
+ tiene éxito, al momento del éxito <code>Postcond</code> debería ser verdadero".
+</p></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org040022f" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org040022f">Propiedades en la llamada y computación</h2>
+<ul>
+<li class="fragment roll-in"><p>
+Propiedades en el estado de llamada de un predicado que pueden
+aparecer en tiempo de ejecución. 
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- calls <span style="color: #eedd82;">Goal</span> : <span style="color: #eedd82;">Cond</span>.
+</pre>
+</div>
+</div>
+<p>
+  se debe interpretar "toda llamada de la forma <code>Goal</code> debería
+satisfacer <code>Cond</code>".
+</p></li>
+<li class="fragment roll-in"><p>
+Propiedades de la computación
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- comp <span style="color: #eedd82;">Goal</span> : <span style="color: #eedd82;">Precond</span>  + <span style="color: #eedd82;">Comp_prop</span>.
+</pre>
+</div>
+</div>
+<p>
+  se debe interpretar "para toda llamada de la forma <code>Goal</code> para la
+cual <code>Precond</code> ocurre, <code>Comp_prop</code> debería ocurrir también para la
+computación de <code>Goal</code>".
+</p></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org683f019" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org683f019">Composición de Aserciones</h2>
+<p>
+Para facilitar la escritura una aserción compuesta de un predicado
+puede ser usado como azúcar sintáctico para las aserciones básicas. La
+aserción compuesta siguiente
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- pred <span style="color: #eedd82;">Pred</span> : <span style="color: #eedd82;">Precond</span> =&gt; <span style="color: #eedd82;">Postcond</span> + <span style="color: #eedd82;">Comp_prop</span>.
+</pre>
+</div>
+</div>
+
+<p>
+corresponde a la siguiente aserción de éxito:
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- success <span style="color: #eedd82;">Pred</span> : <span style="color: #eedd82;">Precond</span> =&gt; <span style="color: #eedd82;">Postcond</span>.
+</pre>
+</div>
+</div>
+
+<p>
+si la aserción <code>pred</code> tiene un campo <code>=&gt;</code> (y un campo
+<code>:</code>). También corresponde a una aserción de computación de la forma:
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- comp <span style="color: #eedd82;">Pred</span> : <span style="color: #eedd82;">Precond</span> + <span style="color: #eedd82;">Comp_prop</span>.
+</pre>
+</div>
+</div>
+
+<p>
+si la aserción <code>pred</code> tiene los campos <code>+</code> y <code>:</code> 
+</p>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org227f1d1" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org227f1d1">Ejemplo de aserciones compuestas</h2>
+<ul>
+<li>Consideremos el programa clasico quicksort <code>qsort</code> . Podemos usar la</li>
+
+</ul>
+<p>
+siguiente aserción para requerir que la salida del procedimiento
+<code>qsort</code> sea una lista.
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- success qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) =&gt; list(<span style="color: #eedd82;">B</span>).
+</pre>
+</div>
+</div>
+
+<ul>
+<li><p>
+alternativamente podemos requerir que <code>qsort</code> es llamado con una
+lista en su primer argumento y tiene exito, entonces el segundo
+argumento también sera una lista.
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- success qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : list(<span style="color: #eedd82;">A</span>) =&gt; list(<span style="color: #eedd82;">B</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<p>
+La diferencia reside en que se espera que <code>B</code> sea una lista en los casos en que <code>A</code> sea una lista. 
+</p>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org9e03bcf" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org9e03bcf">Ejemplo de aserciones compuestas (cont.)</h2>
+<ul>
+<li><p>
+Además podemos requerir que en todas las llamadas al predicado
+<code>qsort</code> el primer argumento debe ser una lista:
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- calls qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : list(<span style="color: #eedd82;">A</span>).
+</pre>
+</div>
+</div></li>
+
+<li><p>
+El procedimiento <code>qsort</code> debe ordenar cualquier lista. Asi,
+requeriremos que todas las llamadas con una lista en el primer
+argumento y una variable en el segundo no fallen:
+</p>
+
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- comp qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) + does_not_fail.
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org0431339" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org0431339">Ejemplo de aserciones compuestas (cont.)</h2>
+<p>
+En lugar de todas estas aserciones se puede usar la compuesta:
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) =&gt; list(<span style="color: #eedd82;">B</span>) + does_not_fail.
+</pre>
+</div>
+</div>
+
+<p>
+que es equivalente a: 
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- calls qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+:- success qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)) =&gt; list(<span style="color: #eedd82;">B</span>).
+:- comp qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) + does_not_fail.
+</pre>
+</div>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org8835d03" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org8835d03">Ejemplo de aserciones compuestas (cont.)</h2>
+<p>
+si queremos llamar a <code>qsort</code> con algo diferente a una variable en el
+segundo argumento se debe agregar:
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) =&gt; list(<span style="color: #eedd82;">B</span>) + does_not_fail.
+:- pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : list(<span style="color: #eedd82;">A</span>) =&gt; list(<span style="color: #eedd82;">B</span>).
+</pre>
+</div>
+</div>
+
+<p>
+que es equivalente a: 
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- calls qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : ((list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)) <span style="color: #00ffff;">;</span> list(<span style="color: #eedd82;">A</span>)).
+:- success qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : ((list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)) <span style="color: #00ffff;">;</span> list(<span style="color: #eedd82;">A</span>)). =&gt; list(<span style="color: #eedd82;">B</span>).
+:- comp qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) + does_not_fail.
+</pre>
+</div>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgd1c03c9" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgd1c03c9">Tipos Regulares</h2>
+<p>
+Tipos Regulares son propiedades cuyas definiciones son  <i>"programas
+regulares"</i>. Ejemplos:
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- regtype tree(<span style="color: #eedd82;">X</span>) # <span style="color: #ffa07a;">"X is a tree."</span>.
+
+<span style="color: #87cefa;">tree</span>(nil).
+<span style="color: #87cefa;">tree</span>(t(<span style="color: #eedd82;">_</span>,<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">R</span>)):- 
+     tree(<span style="color: #eedd82;">L</span>),
+     tree(<span style="color: #eedd82;">R</span>).
+
+:- regtype intlist(<span style="color: #eedd82;">X</span>) # <span style="color: #ffa07a;">"X is a list of integers"</span>
+
+<span style="color: #87cefa;">intlist</span>(<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">intlist</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>) :- int(<span style="color: #eedd82;">X</span>), intlist(<span style="color: #eedd82;">R</span>).
+</pre>
+</div>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orge332489" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orge332489">Lenguaje de aserciones</h2>
+<ul>
+<li><p>
+ejemplo de <code>pred/1</code> 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- pred length(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">N</span>) : list * var =&gt; list * integer 
+# <span style="color: #ffa07a;">"Computes the length of L."</span>.
+:- pred length(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">N</span>) : var * integer =&gt; list * integer  
+# <span style="color: #ffa07a;">"Outputs L of length N."</span>.
+:- pred length(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">N</span>) : list * integer =&gt; list * integer
+# <span style="color: #ffa07a;">"Checks that L is of length N."</span>.
+</pre>
+</div>
+</div></li>
+<li><p>
+ejemplo de <code>pred/2</code>
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- check pred length(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">N</span>) : list * var =&gt; list * integer.
+</pre>
+</div>
+</div></li>
+
+<li><p>
+ejemplo de <code>comp/1</code>
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- comp append(<span style="color: #eedd82;">Xs</span>,<span style="color: #eedd82;">Ys</span>,<span style="color: #eedd82;">Zs</span>) : var * var * var + not_fail.
+</pre>
+</div>
+</div></li>
+
+<li><p>
+<code>test</code> es similar a <code>success</code> pero especifica un caso de test como
+parte de la especificación del predicado
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- test length(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">N</span>) : ( <span style="color: #eedd82;">L</span> = <span style="color: #00ffff;">[</span>1,2,5,2<span style="color: #00ffff;">]</span> ) =&gt; ( <span style="color: #eedd82;">N</span> = 4 ).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org2e46afb" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org2e46afb">Lenguaje de aserciones (cont.)</h2>
+<ul>
+<li><p>
+definición de nuevos modos
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- modedef +<span style="color: #eedd82;">A</span> : nonvar(<span style="color: #eedd82;">A</span>) # <span style="color: #ffa07a;">"A is bound upon predicate entry."</span>.
+
+:- pred p(+<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : integer(<span style="color: #eedd82;">A</span>) =&gt;  ground(<span style="color: #eedd82;">B</span>).
+</pre>
+</div>
+</div>
+<p>
+es equivalente a:
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- pred p(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (nonvar(<span style="color: #eedd82;">A</span>),integer(<span style="color: #eedd82;">A</span>)) =&gt;  ground(<span style="color: #eedd82;">B</span>)
+                         # <span style="color: #ffa07a;">"A is bound upon predicate entry."</span>.
+</pre>
+</div>
+</div></li>
+
+<li><p>
+documentación 
+</p>
+
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- doc(<span style="color: #eedd82;">Pred</span>,<span style="color: #eedd82;">Comment</span>). 
+
+:- doc(p(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>),<span style="color: #ffa07a;">"A is bound upon predicate entry."</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgcfad213" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orgcfad213">Ciaopp</h2>
+
+<figure>
+<img src="arquitectura.png" alt="arquitectura.png">
+
+</figure>
+
+
+
+
+
+
+
+
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org96d8301" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org96d8301">Analisis</h2>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(app, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">app/3</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry app(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>) : (list(<span style="color: #eedd82;">A</span>), list(<span style="color: #eedd82;">B</span>)).
+
+<span style="color: #87cefa;">app</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Y</span>).
+<span style="color: #87cefa;">app</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Xs</span><span style="color: #00ffff;">]</span>, <span style="color: #eedd82;">Ys</span>, <span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Zs</span><span style="color: #00ffff;">]</span>) :- app(<span style="color: #eedd82;">Xs</span>,<span style="color: #eedd82;">Ys</span>,<span style="color: #eedd82;">Zs</span>).
+</pre>
+</div>
+</div></li>
+
+<li><p>
+Salida 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred app(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>) : ( list(<span style="color: #eedd82;">A</span>), list(<span style="color: #eedd82;">B</span>), term(<span style="color: #eedd82;">C</span>) )
+                            =&gt; ( list(<span style="color: #eedd82;">A</span>), list(<span style="color: #eedd82;">B</span>), list(<span style="color: #eedd82;">C</span>) ).
+
+:- true pred app(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>) 
+   : mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">C</span><span style="color: #00ffff;">]]</span>)
+   =&gt; mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]]</span>).
+
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgc2b5964" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgc2b5964">Analisis</h3>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(qsort, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">qsort/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(num, <span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">L</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>) :-
+    partition(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">L2</span>),
+    qsort(<span style="color: #eedd82;">L2</span>,<span style="color: #eedd82;">R2</span>), qsort(<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">R1</span>),
+    append(<span style="color: #eedd82;">R2</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>).
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Left1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Right</span>):-
+    <span style="color: #eedd82;">E</span> &lt; <span style="color: #eedd82;">C</span>, <span style="color: #00ffff;">!</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left1</span>,<span style="color: #eedd82;">Right</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Right1</span><span style="color: #00ffff;">]</span>):-
+    <span style="color: #eedd82;">E</span> &gt;= <span style="color: #eedd82;">C</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right1</span>).
+
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- append(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org4a229f4" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org4a229f4">Analisis</h3>
+<ul>
+<li><p>
+dominio shfr sin el ~:- entry &#x2026; ~ 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred qsort(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">R</span>)
+   : mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">_A</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]]</span>)
+   =&gt; mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">R</span><span style="color: #00ffff;">]]</span>).
+
+:- true pred partition(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span>)
+   : ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">_A</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Left</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Right</span><span style="color: #00ffff;">]]</span>), var(<span style="color: #eedd82;">Left</span>), var(<span style="color: #eedd82;">Right</span>) )
+   =&gt; ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]]</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span><span style="color: #00ffff;">]</span>) ).
+
+:- true pred append(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span>)
+   : ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]]</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span><span style="color: #00ffff;">]</span>) )
+   =&gt; ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]]</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span><span style="color: #00ffff;">]</span>) ).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org8ea2486" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org8ea2486">Analisis</h3>
+<ul>
+<li><p>
+dominio shfr con el <code>:- entry qsort(A,B) : (list(num, A), var(B)).</code> 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>)
+   : ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">]]</span>), var(<span style="color: #eedd82;">B</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]</span>) )
+   =&gt; ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span><span style="color: #00ffff;">]</span>).
+
+:- true pred partition(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span>)
+   : ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">Left</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Right</span><span style="color: #00ffff;">]]</span>), var(<span style="color: #eedd82;">Left</span>), var(<span style="color: #eedd82;">Right</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]</span>) )
+   =&gt; ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span><span style="color: #00ffff;">]</span>).
+
+:- true pred append(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span>)
+   : ( mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]]</span>), var(<span style="color: #eedd82;">_B</span>), ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>) )
+   =&gt; ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span><span style="color: #00ffff;">]</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org0848f79" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org0848f79">Analisis</h3>
+<ul>
+<li><p>
+dominio eterms sin  <code>:- entry qsort(A,B) : (list(num, A), var(B)).</code> 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred qsort(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">R</span>)
+   : ( term(<span style="color: #eedd82;">_A</span>), term(<span style="color: #eedd82;">R</span>) )
+   =&gt; ( list(<span style="color: #eedd82;">_A</span>), list(<span style="color: #eedd82;">R</span>) ).
+
+:- true pred partition(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span>)
+   : ( term(<span style="color: #eedd82;">_A</span>), term(<span style="color: #eedd82;">_B</span>), term(<span style="color: #eedd82;">Left</span>), term(<span style="color: #eedd82;">Right</span>) )
+   =&gt; ( list(arithexpression,<span style="color: #eedd82;">_A</span>), term(<span style="color: #eedd82;">_B</span>), 
+        list(arithexpression,<span style="color: #eedd82;">Left</span>), list(arithexpression,<span style="color: #eedd82;">Right</span>) ).
+
+:- true pred append(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span>)
+   : ( list(<span style="color: #eedd82;">_A</span>), non_empty_list(<span style="color: #eedd82;">X</span>), term(<span style="color: #eedd82;">_B</span>) )
+   =&gt; ( list(<span style="color: #eedd82;">_A</span>), non_empty_list(<span style="color: #eedd82;">X</span>), non_empty_list(<span style="color: #eedd82;">_B</span>) ).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgd490640" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgd490640">Analisis</h3>
+<ul>
+<li><p>
+dominio eterms con  <code>:- entry qsort(A,B) : (list(num, A), var(B)).</code> 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>)
+  : ( list(num,<span style="color: #eedd82;">A</span>), term(<span style="color: #eedd82;">B</span>) )
+  =&gt; ( list(num,<span style="color: #eedd82;">A</span>), list(num,<span style="color: #eedd82;">B</span>) ).
+
+:- true pred partition(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right</span>)
+  : ( list(num,<span style="color: #eedd82;">_A</span>), num(<span style="color: #eedd82;">_B</span>), term(<span style="color: #eedd82;">Left</span>), term(<span style="color: #eedd82;">Right</span>) )
+ =&gt; ( list(num,<span style="color: #eedd82;">_A</span>), num(<span style="color: #eedd82;">_B</span>), list(num,<span style="color: #eedd82;">Left</span>), list(num,<span style="color: #eedd82;">Right</span>) ).
+
+:- true pred append(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">_B</span>)
+ : ( list(num,<span style="color: #eedd82;">_A</span>), list1(num,<span style="color: #eedd82;">X</span>), term(<span style="color: #eedd82;">_B</span>) )
+=&gt; ( list(num,<span style="color: #eedd82;">_A</span>), list1(num,<span style="color: #eedd82;">X</span>), list1(num,<span style="color: #eedd82;">_B</span>) ).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org33a17fb" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org33a17fb">Debugging</h2>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(qsort, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">qsort/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(num, <span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">L</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>) :-
+    partition(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">L2</span>),
+    qsort(<span style="color: #eedd82;">L2</span>,<span style="color: #eedd82;">R2</span>), qsort(<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">R1</span>), 
+    append(<span style="color: #eedd82;">R2</span>,<span style="color: #00ffff;">[</span>x<span style="color: #00ffff;">|</span><span style="color: #eedd82;">R1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>).    <span style="color: #ff4500;">% </span><span style="color: #ff4500;">&lt;-- 'x' should be X (variable)</span>
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Left1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Right</span>):- 
+    <span style="color: #eedd82;">E</span> &lt; <span style="color: #eedd82;">C</span>, <span style="color: #00ffff;">!</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left1</span>,<span style="color: #eedd82;">Right</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Right1</span><span style="color: #00ffff;">]</span>):-
+    <span style="color: #eedd82;">E</span> &gt;= <span style="color: #eedd82;">C</span>,   partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right1</span>).
+
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- append(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>).
+
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgf28900e" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgf28900e">Debugging</h3>
+<ul>
+<li><p>
+Salida
+</p>
+<div style="font-size: 150%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>)
+   : ( list(num,<span style="color: #eedd82;">A</span>), term(<span style="color: #eedd82;">B</span>) )
+   =&gt; ( list(num,<span style="color: #eedd82;">A</span>), list(^(x),<span style="color: #eedd82;">B</span>) ).
+
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org8f516d7" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org8f516d7">Debugging</h3>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(<span style="color: #eedd82;">_</span>, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">qsort/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(num, <span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">L</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>) :-
+    partition(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">L2</span>),  <span style="color: #ff4500;">% </span><span style="color: #ff4500;">&lt;-- swapped second and third arguments</span>
+    qsort(<span style="color: #eedd82;">L2</span>,<span style="color: #eedd82;">R2</span>), qsort(<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">R1</span>),
+    append(<span style="color: #eedd82;">R2</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>).
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span>e<span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Left1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Right</span>):-  <span style="color: #ff4500;">% </span><span style="color: #ff4500;">&lt;-- 'e' should be E (variable)</span>
+    <span style="color: #eedd82;">E</span> &lt; <span style="color: #eedd82;">C</span>, <span style="color: #00ffff;">!</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left1</span>,<span style="color: #eedd82;">Right</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Right1</span><span style="color: #00ffff;">]</span>):-
+    <span style="color: #eedd82;">E</span> &gt;= <span style="color: #eedd82;">C</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right1</span>).
+
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- append(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgf58937b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgf58937b">Debugging</h3>
+<ul>
+<li><p>
+Salida
+</p>
+<div style="font-size: 100%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog"><span style="color: #00ffff;">{</span><span style="color: #eedd82;">In</span> /home/claudio/tmp/orgfiles/data/ciaopp/clase2/hacerslides/debugging/qsort2.<span style="color: #87cefa;">pl</span>
+<span style="color: #eedd82;">WARNING</span> (preproc_errors): (lns 4-8) goal qsort2:partition(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">L2</span>) at literal 1 does not succeed<span style="color: #00ffff;">!</span>
+<span style="color: #00ffff;">}</span>
+<span style="color: #00ffff;">{</span><span style="color: #eedd82;">ERROR</span> (ctchecks_messages): error printing:message_clause_incompatible(<span style="color: #87cefa;">qsort2:partition/4</span>/2,eterms
+ ,qsort2:partition(<span style="color: #00ffff;">[</span>e<span style="color: #00ffff;">|</span><span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">A</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">D</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">B</span>),<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">D</span>,<span style="color: #eedd82;">E</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Right</span>,<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">E</span>,<span style="color: #eedd82;">Left1</span><span style="color: #00ffff;">]</span>)
+<span style="color: #00ffff;">}</span>
+<span style="color: #00ffff;">{</span><span style="color: #eedd82;">In</span> /home/claudio/tmp/orgfiles/data/ciaopp/clase2/hacerslides/debugging/qsort2.<span style="color: #87cefa;">pl</span>
+<span style="color: #eedd82;">WARNING</span> (preproc_errors): (lns 14-15) goal arithmetic:&gt;=(<span style="color: #eedd82;">E</span>,<span style="color: #eedd82;">C</span>) at
+literal 1 does not succeed<span style="color: #00ffff;">!</span>
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org4b9c886" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org4b9c886">Debugging</h3>
+<ul>
+<li><p>
+Chequear Aserciones
+</p>
+<div style="font-size: 80%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(qsort3, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">qsort/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions,regtypes,nativeprops<span style="color: #00ffff;">]</span>).
+
+:- entry qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(num, <span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+
+:- calls qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : list(num, <span style="color: #eedd82;">A</span>).                        <span style="color: #ff4500;">% </span><span style="color: #ff4500;">A1</span>
+:- success qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>)  =&gt; (ground(<span style="color: #eedd82;">B</span>), sorted_num_list(<span style="color: #eedd82;">B</span>)). <span style="color: #ff4500;">% </span><span style="color: #ff4500;">A2</span>
+:- calls partition(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">D</span>) : (ground(<span style="color: #eedd82;">A</span>), ground(<span style="color: #eedd82;">B</span>)).      <span style="color: #ff4500;">% </span><span style="color: #ff4500;">A3</span>
+:- success partition(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">D</span>) =&gt; (list(num, <span style="color: #eedd82;">C</span>),ground(<span style="color: #eedd82;">D</span>)). <span style="color: #ff4500;">% </span><span style="color: #ff4500;">A4</span>
+:- calls append(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>) : (list(num,<span style="color: #eedd82;">A</span>),list(num,<span style="color: #eedd82;">B</span>)).        <span style="color: #ff4500;">% </span><span style="color: #ff4500;">A5</span>
+
+:- prop <span style="color: #87cefa;">sorted_num_list/1</span>.
+<span style="color: #87cefa;">sorted_num_list</span>(<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">sorted_num_list</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>):- number(<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">sorted_num_list</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- 
+    number(<span style="color: #eedd82;">X</span>), number(<span style="color: #eedd82;">Y</span>), <span style="color: #eedd82;">X</span>=&lt;<span style="color: #eedd82;">Y</span>, sorted_num_list(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Y</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>).
+
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">L</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>) :-
+    partition(<span style="color: #eedd82;">L</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">L2</span>),
+    qsort(<span style="color: #eedd82;">L2</span>,<span style="color: #eedd82;">R2</span>), qsort(<span style="color: #eedd82;">L1</span>,<span style="color: #eedd82;">R1</span>),
+    append(<span style="color: #eedd82;">R2</span>,<span style="color: #00ffff;">[</span>x<span style="color: #00ffff;">|</span><span style="color: #eedd82;">R1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">R</span>).
+<span style="color: #87cefa;">qsort</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_B</span>,<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Left1</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Right</span>):-
+    <span style="color: #eedd82;">E</span> &lt; <span style="color: #eedd82;">C</span>, <span style="color: #00ffff;">!</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left1</span>,<span style="color: #eedd82;">Right</span>).
+<span style="color: #87cefa;">partition</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">R</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">E</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Right1</span><span style="color: #00ffff;">]</span>):-
+    <span style="color: #eedd82;">E</span> &gt;= <span style="color: #eedd82;">C</span>, partition(<span style="color: #eedd82;">R</span>,<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">Left</span>,<span style="color: #eedd82;">Right1</span>).
+
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- append(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org862a4e1" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="org862a4e1">Optimización</h2>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(<span style="color: #eedd82;">_</span>, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">dup_first/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[]</span>).
+
+<span style="color: #87cefa;">dup_first</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Xs</span><span style="color: #00ffff;">]</span>, <span style="color: #eedd82;">Zs</span>) :-
+    app(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Xs</span><span style="color: #00ffff;">]</span>, <span style="color: #eedd82;">Zs</span>).
+
+<span style="color: #87cefa;">app</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Y</span>).
+<span style="color: #87cefa;">app</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Xs</span><span style="color: #00ffff;">]</span>, <span style="color: #eedd82;">Ys</span>, <span style="color: #00ffff;">[</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Zs</span><span style="color: #00ffff;">]</span>) :-
+    app(<span style="color: #eedd82;">Xs</span>,<span style="color: #eedd82;">Ys</span>,<span style="color: #eedd82;">Zs</span>).
+</pre>
+</div>
+</div></li>
+
+<li><p>
+Salida 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(<span style="color: #eedd82;">_1</span>,<span style="color: #00ffff;">[</span><span style="color: #87cefa;">dup_first/2</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+<span style="color: #87cefa;">dup_first</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">A</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">]</span>).
+
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org1e60a73" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org1e60a73">Optimización</h3>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 110%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(append,<span style="color: #00ffff;">[</span><span style="color: #87cefa;">appe/3</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span> ) .
+
+
+:- entry appe(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>). 
+
+<span style="color: #87cefa;">appe</span>(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>) :- append(<span style="color: #00ffff;">[</span>1,2,3<span style="color: #00ffff;">|</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>).
+
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">append</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">X</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Y</span>, <span style="color: #00ffff;">[</span><span style="color: #eedd82;">H</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Z</span><span style="color: #00ffff;">]</span>):- append(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>) .
+</pre>
+</div>
+</div></li>
+
+<li><p>
+Salida 
+</p>
+<div style="font-size: 110%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(<span style="color: #eedd82;">_1</span>,<span style="color: #00ffff;">[</span><span style="color: #87cefa;">appe/3</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry appe(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span>).
+
+<span style="color: #87cefa;">appe</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">A</span>,<span style="color: #00ffff;">[</span>1,2,3<span style="color: #00ffff;">|</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]</span>).
+<span style="color: #87cefa;">appe</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">A</span>,<span style="color: #00ffff;">[</span>1,2,3,<span style="color: #eedd82;">B</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">D</span><span style="color: #00ffff;">]</span>) :-
+    append_1(<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">D</span>).
+
+<span style="color: #87cefa;">append_1</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">A</span>).
+<span style="color: #87cefa;">append_1</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">A</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">D</span><span style="color: #00ffff;">]</span>) :-
+    append_1(<span style="color: #eedd82;">C</span>,<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">D</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgb4ee56b" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgb4ee56b">Optimización</h3>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(exponential_ac, <span style="color: #00ffff;">[</span><span style="color: #87cefa;">ent/2</span><span style="color: #00ffff;">]</span>, <span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>) .
+
+
+:- entry ent(<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">_</span>) : int(<span style="color: #eedd82;">Base</span>).
+
+<span style="color: #87cefa;">ent</span>(<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">Res</span>) :- exp(<span style="color: #eedd82;">Base</span>,3,<span style="color: #eedd82;">Res</span>).
+
+<span style="color: #87cefa;">exp</span>(<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">Exp</span>,<span style="color: #eedd82;">Res</span>):-
+     exp_ac(<span style="color: #eedd82;">Exp</span>,<span style="color: #eedd82;">Base</span>,1,<span style="color: #eedd82;">Res</span>).
+
+<span style="color: #87cefa;">exp_ac</span>(0,<span style="color: #eedd82;">_</span>,<span style="color: #eedd82;">Res</span>,<span style="color: #eedd82;">Res</span>).
+
+<span style="color: #87cefa;">exp_ac</span>(<span style="color: #eedd82;">Exp</span>,<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">Tmp</span>,<span style="color: #eedd82;">Res</span>) :-
+    <span style="color: #eedd82;">Exp</span> &gt; 0,
+    <span style="color: #eedd82;">Expl</span> is <span style="color: #eedd82;">Exp</span> - 1,
+    <span style="color: #eedd82;">NTmp</span> is <span style="color: #eedd82;">Tmp</span> * <span style="color: #eedd82;">Base</span>,
+    exp_ac(<span style="color: #eedd82;">Expl</span>,<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">NTmp</span>,<span style="color: #eedd82;">Res</span>).
+</pre>
+</div>
+</div></li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgacbe89e" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="orgacbe89e">Optimizacion</h3>
+<ul>
+<li><p>
+Salida 
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(<span style="color: #eedd82;">_1</span>,<span style="color: #00ffff;">[</span><span style="color: #87cefa;">ent/2</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry ent(<span style="color: #eedd82;">Base</span>,<span style="color: #eedd82;">_A</span>)
+   : int(<span style="color: #eedd82;">Base</span>).
+
+<span style="color: #87cefa;">ent</span>(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) :-
+    <span style="color: #eedd82;">C</span> is <span style="color: #eedd82;">A</span>,
+    <span style="color: #eedd82;">D</span> is <span style="color: #eedd82;">C</span>*<span style="color: #eedd82;">A</span>,
+    <span style="color: #eedd82;">E</span> is <span style="color: #eedd82;">D</span>*<span style="color: #eedd82;">A</span>,
+    exp_ac_1(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">E</span>,<span style="color: #eedd82;">B</span>).
+
+<span style="color: #87cefa;">exp_ac_1</span>(<span style="color: #eedd82;">_1</span>,<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">A</span>).
+
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orge7d87dc" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h2 id="orge7d87dc">Certificación</h2>
+<ul>
+<li><p>
+Entrada
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- <span style="color: #b0c4de;">module</span>(multiply,<span style="color: #eedd82;">_</span>,<span style="color: #00ffff;">[</span>assertions<span style="color: #00ffff;">]</span>).
+
+:- entry mmultiply(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>): (var(<span style="color: #eedd82;">Z</span>),list(<span style="color: #eedd82;">X</span>,list(num)),list(<span style="color: #eedd82;">Y</span>,list(num))).
+:- entry mmultiply(<span style="color: #eedd82;">X</span>,<span style="color: #eedd82;">Y</span>,<span style="color: #eedd82;">Z</span>) : (var(<span style="color: #eedd82;">Z</span>),ground(<span style="color: #eedd82;">X</span>),ground(<span style="color: #eedd82;">Y</span>)). 
+
+
+<span style="color: #87cefa;">mmultiply</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">mmultiply</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">VO</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Rest</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">V1</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Result</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Others</span><span style="color: #00ffff;">]</span>):-
+    mmultiply(<span style="color: #eedd82;">Rest</span>,<span style="color: #eedd82;">V1</span>,<span style="color: #eedd82;">Others</span>),
+    multiply(<span style="color: #eedd82;">V1</span>,<span style="color: #eedd82;">VO</span>,<span style="color: #eedd82;">Result</span>).
+
+<span style="color: #87cefa;">multiply</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #eedd82;">_</span>,<span style="color: #00ffff;">[]</span>).
+<span style="color: #87cefa;">multiply</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">VO</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Rest</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">VI</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">Result</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">Others</span><span style="color: #00ffff;">]</span>):-
+    multiply(<span style="color: #eedd82;">Rest</span>,<span style="color: #eedd82;">VI</span>,<span style="color: #eedd82;">Others</span>),
+    vmul(<span style="color: #eedd82;">VO</span>,<span style="color: #eedd82;">VI</span>,<span style="color: #eedd82;">Result</span>).
+
+<span style="color: #87cefa;">vmul</span>(<span style="color: #00ffff;">[]</span>,<span style="color: #00ffff;">[]</span>,0).
+<span style="color: #87cefa;">vmul</span>(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H1</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">T1</span><span style="color: #00ffff;">]</span>,<span style="color: #00ffff;">[</span><span style="color: #eedd82;">H2</span><span style="color: #00ffff;">|</span><span style="color: #eedd82;">T2</span><span style="color: #00ffff;">]</span>,<span style="color: #eedd82;">Result</span>):-
+    vmul(<span style="color: #eedd82;">T1</span>,<span style="color: #eedd82;">T2</span>,<span style="color: #eedd82;">Newresult</span>),
+    <span style="color: #eedd82;">Product</span> is <span style="color: #eedd82;">H1</span>*<span style="color: #eedd82;">H2</span>,
+    <span style="color: #eedd82;">Result</span> is <span style="color: #eedd82;">Product</span>+<span style="color: #eedd82;">Newresult</span>.
+</pre>
+</div>
+</div></li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org0bc0113" data-background="" data-background-size="" data-background-position="" data-background-repeat="" data-background-transition="">
+<div class="slide-header"></div>
+<h3 id="org0bc0113">Certificación</h3>
+<ul>
+<li><p>
+Certificado
+</p>
+<div style="font-size: 130%;">
+<div class="org-src-container">
+
+<pre  class="src src-prolog">:- true pred <span style="color: #eedd82;">A</span> is <span style="color: #eedd82;">B</span>+<span style="color: #eedd82;">C</span> : (mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]]</span>),var(<span style="color: #eedd82;">A</span>),ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>))
+                          =&gt; (ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>)).
+:- true pred <span style="color: #eedd82;">A</span> is <span style="color: #eedd82;">B</span>*<span style="color: #eedd82;">C</span> : (mshare(<span style="color: #00ffff;">[[</span><span style="color: #eedd82;">A</span><span style="color: #00ffff;">]]</span>),var(<span style="color: #eedd82;">A</span>),ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>))
+                         =&gt; (ground(<span style="color: #00ffff;">[</span><span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>,<span style="color: #eedd82;">C</span><span style="color: #00ffff;">]</span>)).
+
+:- true pred <span style="color: #eedd82;">A</span> is <span style="color: #eedd82;">B</span>+<span style="color: #eedd82;">C</span> : (term(<span style="color: #eedd82;">A</span>),num(<span style="color: #eedd82;">B</span>),num(<span style="color: #eedd82;">C</span>))
+                         =&gt; (num(<span style="color: #eedd82;">A</span>),num(<span style="color: #eedd82;">B</span>),num(<span style="color: #eedd82;">C</span>)).
+
+:- true pred <span style="color: #eedd82;">A</span> is <span style="color: #eedd82;">B</span>*<span style="color: #eedd82;">C</span> : (term(<span style="color: #eedd82;">A</span>),num(<span style="color: #eedd82;">B</span>),num(<span style="color: #eedd82;">C</span>))
+                         =&gt; (num(<span style="color: #eedd82;">A</span>),num(<span style="color: #eedd82;">B</span>),num(<span style="color: #eedd82;">C</span>)).
+</pre>
+</div>
+</div></li>
+
+</ul>
+<div class="slide-footer"></div>
+</section>
+</section>
+</div>
+</div>
+<script src="../reveal.js-master/lib/js/head.min.js"></script>
+<script src="../reveal.js-master/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '../reveal.js-master/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: '../reveal.js-master/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-master/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-master/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: '../reveal.js-master/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+,});
+</script>
+</body>
+</html>

@@ -126,7 +126,195 @@ Los dominios abstractos se irán creando a medida que sea necesario con nombres 
 Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el archivo con los resultados del análisis y el chequeo. 
 
 
+* Teoría
 
+#+BEGIN_SRC latex :file imgs/summary.png :results link file 
+\begin{tikzpicture}
+  [every annotation/.style={fill=red!20}]
+  
+  \path[mindmap,
+    concept color=black,
+    grow cyclic,
+    text=white,
+    level 1/.append style={sibling angle=90},
+    %% level 2/.append style={sibling distance=1cm},
+    every node/.style={concept}
+  ]
+  %
+  node {Interpretación Abstracta}
+  %
+  child[concept color=violet]{node (semcol) {Semántica colectoras}
+    child{node {Retículos ``Se aproxima mejor''}}
+    child{node {Inserción de Galois}
+      child{node {\scriptsize Aprox. segura}}
+      child[concept color=red!50!black]
+      {node {\scriptsize Teorema fundamental}}
+    }
+  }
+  %
+  child[concept color=blue!50!black]{node {Aproxi\-maciones}
+    child {node {Aproxi\-mación correcta}
+      child {node {Idea básica}}
+      child {node {De una fnc.}}
+    }
+    child {node {De un programa}
+      child{node{$F_P$ (concreto)}}
+      child{node{$F_P^*$}}
+    }
+    child {node (sigabs) {Significado abstracto $F_\alpha$}
+      child{node {Se\-gu\-ri\-dad}}
+    }
+  }
+  %
+  child[concept color=orange]{node (domabs) {Dominio abstracto}
+    child{node {Función de concretización\\$\gamma$}}
+    child{node {Función de abstracción\\$\alpha$}}
+  }
+  %
+  child[concept color=green!50!black]{node {Propiedades}
+    child{node{Exactitud}
+      child[concept color=blue!50!black]{
+        node{\scriptsize Aprox. correcta}}
+    }
+    child{node{Termi\-nación}}
+    child{node{Eficiencia}}
+    child{node{Precisión}}
+    child{node{Utilidad}}
+  };
+
+
+  \node[annotation, below right] at (semcol.south east) (annsemcol) {\scriptsize No alcanza con definir ``entrada-salida''. Se necesita información de ``estado'' en cada punto del programa.};
+
+  
+  \tikzstyle{every node}=[draw]
+  \node[above right=2.5cm of domabs] (domabsimg) {%%
+    \includegraphics[width=8cm]{%%
+      /home/poo/repos/curso-AILP/imgs/alphagamma.png}};  
+  \node[right=2.5 of sigabs] (sigabsimg) {%%
+    \includegraphics[width=7cm]{%%
+      /home/poo/repos/curso-AILP/imgs/absmean.png}};
+
+  \draw[arrows=->, ultra thick, orange]
+  (domabs) edge (domabsimg.south west);
+  \draw[arrows=->, ultra thick, blue!50!black, bend right]
+  (sigabs) edge (sigabsimg);
+  \draw[arrows=->, ultra thick, violet, bend left]
+  (semcol) edge (annsemcol);
+\end{tikzpicture}
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/summary.png]]
+
+
+
+** Propiedades de la interpretación abstracta
+#+BEGIN_SRC latex :file imgs/1.props_interp_abstr.png :results link file 
+\begin{tikzpicture}
+  \path[mindmap, concept color=black, text=white]
+  %
+  node[concept,align=center]{Propiedades de la\\Interpretación Abstracta}
+  [clockwise from=35]
+  child[concept color=red!50!black] {
+    node[concept] {Requeridas}
+    child {node[concept] (exac) {Exactitud}}
+    child {node[concept] (term) {Terminación}}
+  }
+  %
+  child[concept color=green!50!black]{
+    node[concept] {Deseables}
+    child {node[concept] (efic) {Eficiencia}}
+    child {node[concept] (prec) {Precisión}}
+    child {node[concept] (util) {Utilidad}}
+  };
+
+  \node[annotation, right=of exac, fill=red!20] {\small Aproximaciones correctas. La aproximación sea lo más conservadora posible.};
+  \node[annotation, right=of term, fill=red!20] {\small La compilación debe terminar.};
+  \node[annotation, right=of efic, fill=red!20] {\small Tiempo de análisis debe ser finito y lo más pequeño posible.};
+  \node[annotation, right=of prec, fill=red!20] {\small Precisión en la información recopilada.};
+  \node[annotation, right=of util, fill=red!20] {\small Determinar qué información vale la pena recopilar.};
+
+\end{tikzpicture}
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/propiedades_interpretacion_abstracta.png]]
+
+** Aproximaciones correctas
+#+BEGIN_SRC latex :file imgs/2.aprox_correctas.png :results link file 
+\begin{tikzpicture}
+  \path[mindmap, concept color=black, text=white]
+  %
+  node[concept,align=center]{Aproximaciones Correctas}
+  [clockwise from=35]
+  child[concept color=green!50!black] {
+    node[concept] {Para una propiedad $p$}
+    child[grow=0] {node[concept]
+      {dpq': $\forall x, x \in S \Rightarrow p(x)$}
+      child {node[concept] {\scriptsize Alter\-na\-ti\-va}
+        [grow'=right, sibling distance=1.75cm]
+        %
+        child{node[concept, align=center]
+          {\scriptsize Cons\-tru\-ir}
+          child[concept color=white!20]{node[concept, text=black]
+            {\scriptsize un cjto. $S_a \supseteq S$}
+          }
+        }
+        %
+        child{node[concept]
+          {\scriptsize Demos\-trar}
+          child[concept color=white!20]{node[concept, text=black]
+            {\scriptsize $\forall x x \in S_a \Rightarrow p(x)$}
+          }
+        }
+        %
+        child[concept color=red!50!black]{node[concept]
+          {\scriptsize $\therefore$}
+          child{node[concept]
+            {\scriptsize $S_a$ es una aprox. segura de $S$}
+          }
+        }
+      }
+    }
+  }
+  %%
+  child[concept color=green!50!black] {
+    node[concept] {Para una función $F$}
+    child[grow=0, level distance=3.5cm] {node[concept]
+      {dpq': $\forall x$ $x \in S \Rightarrow p(F(x))$}
+      [grow'=right, sibling distance=1.75cm]
+      child[level distance=2.5cm] {node[concept]
+        {\scriptsize Buscar}
+        child[concept color=white!20]{node[concept, text=black]
+          {\scriptsize una fnc. $G: S \rightarrow S$}
+        }
+      }
+      child[level distance=2.5cm] {node[concept]
+        {\scriptsize Demos\-trar}
+        child[concept color=white!20]{node[concept, text=black]
+          {\scriptsize $\forall x, x \in S p(G(x)) \Rightarrow p(F(x))$}
+        }
+      }
+      child[level distance=2.5cm, concept color=red!50!black] {node[concept]
+        {\scriptsize $\therefore$}
+        child{node[concept]
+          {\scriptsize $G$ es una aprox. segura de $S$}
+        }
+      }
+    }
+  };
+\end{tikzpicture}
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/2.aprox_correctas.png]]
+
+
+
+** Función de concretización 
+$\gamma : D_\alpha → \wp(D)$
+** Función de abstracción
+$\alpha : \wp(D) \rightarrow D_\alpha$
 * Meta     :noexport:
 
   # ----------------------------------------------------------------------
@@ -177,6 +365,10 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
   # #+LATEX_HEADER: \usetikzlibrary{shapes.symbols}
   # #+LATEX_HEADER: \usetikzlibrary{positioning}
   # #+LATEX_HEADER: \usetikzlibrary{trees}
+  
+  # -- Tikz used in src ambients
+  #+PROPERTY: header-args:latex :headers '("\\usepackage{tikz}" "\\usetikzlibrary{shapes.geometric}" "\\usetikzlibrary{shapes.symbols}" "\\usetikzlibrary{positioning}" "\\usetikzlibrary{arrows.meta}" "\\usetikzlibrary{trees}" "\\usetikzlibrary{mindmap}") :results output :imagemagick t :border 1em
+
 
   # #+LATEX_HEADER_EXTRA:
 

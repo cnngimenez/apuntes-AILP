@@ -206,8 +206,6 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 #+RESULTS:
 [[file:imgs/summary.png]]
 
-
-
 ** Propiedades de la interpretación abstracta
 #+BEGIN_SRC latex :file imgs/1.props_interp_abstr.png :results link file 
 \begin{tikzpicture}
@@ -367,8 +365,7 @@ $\alpha : \wp(D) \rightarrow D_\alpha$
   # #+LATEX_HEADER: \usetikzlibrary{trees}
   
   # -- Tikz used in src ambients
-  #+PROPERTY: header-args:latex :headers '("\\usepackage{tikz}" "\\usetikzlibrary{shapes.geometric}" "\\usetikzlibrary{shapes.symbols}" "\\usetikzlibrary{positioning}" "\\usetikzlibrary{arrows.meta}" "\\usetikzlibrary{trees}" "\\usetikzlibrary{mindmap}") :results output :imagemagick t :border 1em
-
+  #+PROPERTY: header-args:latex :headers '("\\usepackage{tikz}" "\\usetikzlibrary{shapes.geometric}" "\\usetikzlibrary{shapes.symbols}" "\\usetikzlibrary{positioning}" "\\usetikzlibrary{arrows.meta}""\\usetikzlibrary{trees}" "\\usetikzlibrary{mindmap}") :results output :imagemagick t :border 1em :iminoptions -density 600 :imoutoptions -resize 1000 
 
   # #+LATEX_HEADER_EXTRA:
 

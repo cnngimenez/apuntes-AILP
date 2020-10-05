@@ -114,7 +114,21 @@ Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para 
 
 
 ** comp
-Varios de los predicados para ~comp~ están definidos en el módulo ~native_pros~. Es necesario incluirlo en el preámbulo. Más información en: [[info:ciao#Properties which are native to analyzers][info:ciao#Properties which are native to analyzers]]
+Varios de los predicados para ~comp~ están definidos en el módulo ~assertions/native_pros~. Es necesario incluirlo en el preámbulo ~module~ como ~nativeprops~. Por ejemplo: 
+
+#+BEGIN_SRC prolog
+:- module(the_file, _, [assertions, nativeprops]).
+#+END_SRC
+
+O sino, se puede agregar como módulo:
+
+#+BEGIN_SRC prolog
+:- use_module(library(assertions/native_props)).
+#+END_SRC
+
+
+
+Más información en: [[info:ciao#Properties which are native to analyzers][info:ciao#Properties which are native to analyzers]]
 
 Algunos predicados para chequeo de computación interesantes son: ~not_fails, no_choicepoints, possibly_fails, fails, non_det, is_det, possibly_nondet, finite_solutions, terminates, exception, no_exception, possible_exceptions~.
 
@@ -385,6 +399,7 @@ Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha}) es una aproxima
 $$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$
 - $T_P \uparrow \omega$ es procedimiento para obtener el mínimo punto fijo comenzando desde $\omega = 1$.
 
+Observar que la definición de T_{P} depende del programa P.
  
 ** Ejemplo
 Sea el siguiente programa P:
@@ -434,6 +449,8 @@ Aplicar la interpretación abstracta consiste en definir lo siguiente:
   - Es la versión abstracta de T_{P}
   - $T^\alpha_P : I^\alpha \to I^\alpha$
 - Inserción de Galois: $(I^\alpha, \gamma, I, \alpha)$
+
+Considerar que T^{\alpha}_{P} depende del programa abstracto P_{\alpha} (sería correcto decir $T^{\alpha}_{P_{\alpha}}$ en vez de T^{\alpha}_{P}).
 
 Para demostrar exactitud o terminación se debe:
 - Exactitud:

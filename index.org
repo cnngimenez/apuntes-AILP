@@ -310,7 +310,7 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 
 
 ** Función de concretización 
-Sea D_\alpha un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha → \wp(D)$ es la función de concretización.
+Sea D_{\alpha} un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha → \wp(D)$ es la función de concretización.
 
 Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede definir a \gamma como sigue:
 
@@ -321,10 +321,10 @@ Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede
 \gamma(\top) &= Z 
 \end{align*}
 
-Es preciso dar la definición de \bot como sigue: $\gamma(\bot) = \emptyset$.
+Es preciso dar la definición de $\bot$ como sigue: $\gamma(\bot) = \emptyset$.
 
 ** Función de abstracción
-Sea D un dominio y D_\alpha el dominio abstracto, se define a 
+Sea D un dominio y D_{\alpha} el dominio abstracto, se define a 
 $\alpha : \wp(D) \rightarrow D_\alpha$ como la función de abstracción.
 
 Ejemplo: $\alpha({1,2,3}) = [+]$
@@ -350,11 +350,11 @@ La semántica I/O que se viene tratando es muy escueta. El análisis de semánti
 
 
 *** Estructura de Retículo
-Se puede estrablecer una operación de orden \le_\alpha sobre el dominio abstracto D_\alpha. Si $(D_\alpha, \le_\alpha)$ es un retículo completo, entonces para todo $S \subseteq D_\alpha$, existe un único mínimo límite superior $\sqcup S \in D_\alpha$. 
+Se puede estrablecer una operación de orden \le_{\alpha} sobre el dominio abstracto D_{\alpha}. Si $(D_\alpha, \le_\alpha)$ es un retículo completo, entonces para todo $S \subseteq D_\alpha$, existe un único mínimo límite superior $\sqcup S \in D_\alpha$. 
 
 ** Inserción de Galois
 Sea:
-- D y D_\alpha retículos completos
+- D y D_{\alpha} retículos completos
 - $\gamma : D_\alpha \to D$ una función monótona de concretización.
 - $\alpha : D \to D_alpha$ una función monótona de abstracción.
 
@@ -370,7 +370,7 @@ Sea una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$. Se dice que $\lamb
 *** Teorema fundamental
 Dada una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$ y dos funciones monótonas $F : D \to D$ y $F_\alpha : D_\alpha \to D_\alpha$.
 
-Si F_\alpha es una aproximación de F entonces lfp(F_\alpha) es una aproximación de lfp(F).
+Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha}) es una aproximación de lfp(F).
 
 * Semántica de Punto Fijo
 
@@ -424,26 +424,26 @@ T_P \uparrow \omega &= H
 ** Interpretación abstracta "Bottom Up"
 Aplicar la interpretación abstracta consiste en definir lo siguiente:
 
-- Un dominio abstracto: I^\alpha
+- Un dominio abstracto: I^{\alpha}
   - donde sus elementos son aproximaciones de elementos de $I = \wp(B)$
 - Función de concretización: \gamma
   - $\gamma : I^\alpha \to I$
 - Función de abstracción: \alpha
   - $\alpha : I \to I^\alpha$
-- Operador abstracto: T^\alpha_P
-  - Es la versión abstracta de T_P
+- Operador abstracto: T^{\alpha}_{P}
+  - Es la versión abstracta de T_{P}
   - $T^\alpha_P : I^\alpha \to I^\alpha$
 - Inserción de Galois: $(I^\alpha, \gamma, I, \alpha)$
 
 Para demostrar exactitud o terminación se debe:
 - Exactitud:
-  - I^\alpha es un retículo completo
-  - I^\alpha Debe aproximar a $I: \forall M \in I, \gamma(\alpha(M)) \supseteq M$
-  - T^\alpha_P es una aproximación segura de T_P
+  - I^{\alpha} es un retículo completo
+  - I^{\alpha} Debe aproximar a $I: \forall M \in I, \gamma(\alpha(M)) \supseteq M$
+  - T^{\alpha}_{P} es una aproximación segura de T_{P}
     - i.e. $\forall d, d \in  I^\alpha, \gamma(T^\alpha_P(d)) \supseteq T_P(\gamma(d))$
 - Terminacion:
-  - T^\alpha_P es monótono
-  - I^\alpha cadena ascendente finita.
+  - T^{\alpha}_{P} es monótono
+  - I^{\alpha} cadena ascendente finita.
 
 Con esto se puede deducir que $H^\alpha = lfp(T^\alpha_P) = T^\alpha_P \uparrow n$ donde:
 - $n$ es el número de pasos (finito)
@@ -499,11 +499,11 @@ La Figura ref:intabs_bottom_up muestra los elementos indicados anteriormente y l
   # -- LaTeX Export
   # #+LATEX_CLASS: article
   # -- -- Tikz
-  # #+LATEX_HEADER: \usepackage{tikz}
-  # #+LATEX_HEADER: \usetikzlibrary{shapes.geometric}
-  # #+LATEX_HEADER: \usetikzlibrary{shapes.symbols}
-  # #+LATEX_HEADER: \usetikzlibrary{positioning}
-  # #+LATEX_HEADER: \usetikzlibrary{trees}
+  #+LATEX_HEADER: \usepackage{tikz}
+  #+LATEX_HEADER: \usetikzlibrary{shapes.geometric}
+  #+LATEX_HEADER: \usetikzlibrary{shapes.symbols}
+  #+LATEX_HEADER: \usetikzlibrary{positioning}
+  #+LATEX_HEADER: \usetikzlibrary{trees}
   
   # -- Tikz used in src ambients
   #+PROPERTY: header-args:latex :headers '("\\usepackage{tikz}" "\\usetikzlibrary{shapes.geometric}" "\\usetikzlibrary{shapes.symbols}" "\\usetikzlibrary{positioning}" "\\usetikzlibrary{arrows.meta}""\\usetikzlibrary{trees}" "\\usetikzlibrary{mindmap}") :results output :imagemagick t :border 1em :iminoptions -density 600 :imoutoptions -resize 1000 

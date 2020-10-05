@@ -128,7 +128,7 @@ div.col-md-9.col-md-pull-3 a:focus {
 div.col-md-9.col-md-pull-3 img {
   max-width: 100%;
   height: auto; 
-  display: block;
+  display: inline-block;
 }
 
 /* Inherit fonts for inputs and buttons */

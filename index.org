@@ -310,9 +310,150 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 
 
 ** Función de concretización 
-$\gamma : D_\alpha → \wp(D)$
+Sea D_\alpha un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha → \wp(D)$ es la función de concretización.
+
+Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede definir a \gamma como sigue:
+
+\begin{align*}
+\gamma([-]) &= \{x \in Z \arrowvert x < 0  \} \\
+\gamma([0]) &= \{0\} \\
+\gamma([+]) &= \{x \in Z \arrowvert x > 0\} \\
+\gamma(\top) &= Z 
+\end{align*}
+
+Es preciso dar la definición de \bot como sigue: $\gamma(\bot) = \emptyset$.
+
 ** Función de abstracción
-$\alpha : \wp(D) \rightarrow D_\alpha$
+Sea D un dominio y D_\alpha el dominio abstracto, se define a 
+$\alpha : \wp(D) \rightarrow D_\alpha$ como la función de abstracción.
+
+Ejemplo: $\alpha({1,2,3}) = [+]$
+
+** Significado abstracto
+La función $F_\alpha : D_\alpha \to D_\alpha$ se denomina *función de significado abstracto*.
+
+*** Significado abstracto segura
+Se dice que $F_\alpha$ es segura si:
+
+$$\forall \lambda, \lambda \in D_\alpha, \gamma(F_\alpha(\lambda)) \supseteq F^*_P(\gamma(\lambda))$$
+
+Por ejemplo: Sea $P = (y := x * -3)$ un programa con entrada $x$ y salida $y$. 
+Entonces la función que representa a este programa concreto es $F_P = x * -3$.
+Abstrayéndolo con la función de significado abstracto se obtiene $F_\alpha = x *_\alpha [-]$ donde $*_\alpha$ es la operación abstracta de los signos definida en los ejemplos anteriores.
+
+Si el programa tiene como entrada un número positivo ($F_P(x) : x > 0$ abstrayéndolo resulta en $F_\alpha([+])$), entonces se obtiene: $F_\alpha([+]) = [+] *_\alpha [-] = [-]$.
+
+** Semánticas colectoras
+La semántica I/O que se viene tratando es muy escueta. El análisis de semánticas extendidas se basa en deducir información sobre el estado en los puntos de programa (/fixedpoints/). Pero diferentes puntos de programa pueden alcanzarse bajo diferentes estados y desde diferentes puntos. Por ello, se necesita calcular una colección semántica de estados abstractos para un punto de programa.
+
+"Resumir" la semántica colectora (/collecting semantics/) sería más eficiente. Para ello se puede utilizar la estructura de retículo (/lattice/) en el dominio abstracto.
+
+
+*** Estructura de Retículo
+Se puede estrablecer una operación de orden \le_\alpha sobre el dominio abstracto D_\alpha. Si $(D_\alpha, \le_\alpha)$ es un retículo completo, entonces para todo $S \subseteq D_\alpha$, existe un único mínimo límite superior $\sqcup S \in D_\alpha$. 
+
+** Inserción de Galois
+Sea:
+- D y D_\alpha retículos completos
+- $\gamma : D_\alpha \to D$ una función monótona de concretización.
+- $\alpha : D \to D_alpha$ una función monótona de abstracción.
+
+La estructura $(D_\alpha, \gamma, D, \alpha)$ se denomina *inserción de Galois* si cumple con lo siguiente:
+
+- $\forall \lambda \in D_\alpha . \lambda = \alpha(\gamma(\lambda))$
+- $\forall d \in D . d \subseteq \gamma(\alpha(d))$
+
+*** Aproximación Segura
+
+Sea una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$. Se dice que $\lambda \in D_\alpha$ se aproxima de forma segura a $d \in D$ sssi $d \subseteq \gamma(\lambda)$.
+
+*** Teorema fundamental
+Dada una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$ y dos funciones monótonas $F : D \to D$ y $F_\alpha : D_\alpha \to D_\alpha$.
+
+Si F_\alpha es una aproximación de F entonces lfp(F_\alpha) es una aproximación de lfp(F).
+
+* Semántica de Punto Fijo
+
+** Definiciones
+- Un lenguaje de primer orden $L$, asociado a un programa $P$.
+- Sea $U$ el Universo de Herbrand.
+- Sea $B$ la sa Base de Herbrand.
+- Una Interpretación de Herbrand es un subconjunto de $B$.
+- Sea $I$ es el conjunto de todas las interpretaciones de Herbrand.
+- Un Modelo de Herbrand es una interpretación de Herbrand que contiene todas las consecuencias del programa.
+- Sea $T_P : I \to I$ el operador de consecuencia inmediata. Está definido por 
+$$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$
+- $T_P \uparrow \omega$ es procedimiento para obtener el mínimo punto fijo comenzando desde $\omega = 1$.
+
+ 
+** Ejemplo
+Sea el siguiente programa P:
+
+#+BEGIN_SRC prolog
+p(f(X)) :- p(X).
+p(a).
+q(a).
+q(b).
+#+END_SRC
+
+Escrito formalmente:
+$P = \{ p(f(X)) \leftarrow p(X). p(a). q(a). q(b). \}$
+
+El Universo de Herbrand es:
+$$U = \{ a,b,f(a),f(b),f(f(a)),f(f(b)),\ldots \}$$
+
+La Base de Herbrand es:
+$$B = \{ p(a),p(b),q(a),q(b),p(f(a)),p(f(b)),p(f(f(a))), p(f(f(b))), q(f(a))\ldots \}$$
+
+El conjunto de todas las interpretaciones de Herbrand es:
+$$I = \mbox{ todos los subconjuntos de } B$$
+
+Un modelo de Herbrand es:
+$$H = \{ q(a), q(b), p(a), p(f(a)), p(f(f(a))), \ldots \}$$
+
+El procedimiento para obtener el mínimo punto fijo es:
+\begin{align*}
+T_P \uparrow 0 &= \{ p(a),q(a),q(b) \}\\
+T_P \uparrow 1 &= \{ p(a),q(a),q(b),p(f(a)) \} \\
+T_P \uparrow 2 &= \{ p(a),q(a),q(b),p(f(a)),p(f(f(a))) \} \\
+\ldots \\
+T_P \uparrow \omega &= H
+\end{align*}      
+
+
+** Interpretación abstracta "Bottom Up"
+Aplicar la interpretación abstracta consiste en definir lo siguiente:
+
+- Un dominio abstracto: I^\alpha
+  - donde sus elementos son aproximaciones de elementos de $I = \wp(B)$
+- Función de concretización: \gamma
+  - $\gamma : I^\alpha \to I$
+- Función de abstracción: \alpha
+  - $\alpha : I \to I^\alpha$
+- Operador abstracto: T^\alpha_P
+  - Es la versión abstracta de T_P
+  - $T^\alpha_P : I^\alpha \to I^\alpha$
+- Inserción de Galois: $(I^\alpha, \gamma, I, \alpha)$
+
+Para demostrar exactitud o terminación se debe:
+- Exactitud:
+  - I^\alpha es un retículo completo
+  - I^\alpha Debe aproximar a $I: \forall M \in I, \gamma(\alpha(M)) \supseteq M$
+  - T^\alpha_P es una aproximación segura de T_P
+    - i.e. $\forall d, d \in  I^\alpha, \gamma(T^\alpha_P(d)) \supseteq T_P(\gamma(d))$
+- Terminacion:
+  - T^\alpha_P es monótono
+  - I^\alpha cadena ascendente finita.
+
+Con esto se puede deducir que $H^\alpha = lfp(T^\alpha_P) = T^\alpha_P \uparrow n$ donde:
+- $n$ es el número de pasos (finito)
+- $H^\alpha$ aproximará a $H$.
+
+La Figura ref:intabs_bottom_up muestra los elementos indicados anteriormente y la relación entre ellos. Obsérvese la separación entre los dos "dominios" de interpretación e interpretación abstracta y el uso de las funciones de concretización y abstracción para poder "ir y venir" entre ellos.
+
+#+caption: Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. label:fig:intabs_bottom_up
+[[file:imgs/bottomup.png]]
+
 * Meta     :noexport:
 
   # ----------------------------------------------------------------------

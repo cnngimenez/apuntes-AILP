@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <title>Apuntes del Curso Análisis Estático de Programas Lógicos</title>
-<!-- 2020-10-04 dom 17:53 -->
+<!-- 2020-10-05 lun 18:50 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Org-mode">
@@ -218,6 +218,29 @@ $(function() {
 <li><a href="#sec-3-2">3.2. Aproximaciones correctas</a></li>
 <li><a href="#sec-3-3">3.3. Función de concretización</a></li>
 <li><a href="#sec-3-4">3.4. Función de abstracción</a></li>
+<li><a href="#sec-3-5">3.5. Significado abstracto</a>
+<ul class="nav">
+<li><a href="#sec-3-5-1">3.5.1. Significado abstracto segura</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-6">3.6. Semánticas colectoras</a>
+<ul class="nav">
+<li><a href="#sec-3-6-1">3.6.1. Estructura de Retículo</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-7">3.7. Inserción de Galois</a>
+<ul class="nav">
+<li><a href="#sec-3-7-1">3.7.1. Aproximación Segura</a></li>
+<li><a href="#sec-3-7-2">3.7.2. Teorema fundamental</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Semántica de Punto Fijo</a>
+<ul class="nav">
+<li><a href="#sec-4-1">4.1. Definiciones</a></li>
+<li><a href="#sec-4-2">4.2. Ejemplo</a></li>
+<li><a href="#sec-4-3">4.3. Interpretación abstracta "Bottom Up"</a></li>
 </ul>
 </li>
 </ul>
@@ -573,8 +596,6 @@ Se puede utilizar el predicado <code>output/0</code> en la consola CiaoPP para o
 </figure>
 </div>
 
-
-
 <div id="outline-container-sec-3-1" class="outline-3">
 <h3 id="sec-3-1"><span class="section-number-3">3.1</span> Propiedades de la interpretación abstracta</h3>
 <div class="outline-text-3" id="text-3-1">
@@ -603,16 +624,328 @@ Se puede utilizar el predicado <code>output/0</code> en la consola CiaoPP para o
 <h3 id="sec-3-3"><span class="section-number-3">3.3</span> Función de concretización</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-<img src="ltxpng/index_0f3c6ccf03039934407f6ee0c9739108d59849b0.png" class="img-responsive" alt="$\gamma : D_\alpha → \wp(D)$">
+Sea D_&alpha; un dominio abstracto y <img src="ltxpng/index_abfd4dd8989b9c14d9af4eced9a00f9b515bc8ad.png" class="img-responsive" alt="$\wp(D)$"> partes de (o "conjunto potencia de") un dominio concreto, se dice que <img src="ltxpng/index_0f3c6ccf03039934407f6ee0c9739108d59849b0.png" class="img-responsive" alt="$\gamma : D_\alpha → \wp(D)$"> es la función de concretización.
+</p>
+
+<p>
+Ejemplo, sea el dominio abstracto <img src="ltxpng/index_76f9165113c65418ee5152957e5722ff68884428.png" class="img-responsive" alt="$D_\alpha = \{ [-],[0],[+], \top \}$">, se puede definir a &gamma; como sigue:
+</p>
+
+
+<figure>
+<p><img src="ltxpng/index_2f1cb3e8b82e8d5b9d3611aef805df77d8b1aebf.png" class="img-responsive" alt="\begin{align*}
+\gamma([-]) &amp;amp;= \{x \in Z \arrowvert x &amp;lt; 0  \} \\
+\gamma([0]) &amp;amp;= \{0\} \\
+\gamma([+]) &amp;amp;= \{x \in Z \arrowvert x &amp;gt; 0\} \\
+\gamma(\top) &amp;amp;= Z 
+\end{align*}
+"></p>
+</figure>
+
+<p>
+Es preciso dar la definición de como sigue: <img src="ltxpng/index_6f9b567a9f6a10730539b95bdb58b30f118cf69d.png" class="img-responsive" alt="$\gamma(\bot) = \emptyset$">.
 </p>
 </div>
 </div>
+
 <div id="outline-container-sec-3-4" class="outline-3">
 <h3 id="sec-3-4"><span class="section-number-3">3.4</span> Función de abstracción</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-<img src="ltxpng/index_1c295d46e81f69e8f5fcee0a8c0dac57d0537dc3.png" class="img-responsive" alt="$\alpha : \wp(D) \rightarrow D_\alpha$">
+Sea D un dominio y D_&alpha; el dominio abstracto, se define a 
+<img src="ltxpng/index_1c295d46e81f69e8f5fcee0a8c0dac57d0537dc3.png" class="img-responsive" alt="$\alpha : \wp(D) \rightarrow D_\alpha$"> como la función de abstracción.
 </p>
+
+<p>
+Ejemplo: <img src="ltxpng/index_220cb035a6c2ef3b216e9c1f729f66036922290e.png" class="img-responsive" alt="$\alpha({1,2,3}) = [+]$">
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> Significado abstracto</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+La función <img src="ltxpng/index_29f1b0094cf4ca94080ba9a4c3fe3e38783697b0.png" class="img-responsive" alt="$F_\alpha : D_\alpha \to D_\alpha$"> se denomina <b>función de significado abstracto</b>.
+</p>
+</div>
+
+<div id="outline-container-sec-3-5-1" class="outline-4">
+<h4 id="sec-3-5-1"><span class="section-number-4">3.5.1</span> Significado abstracto segura</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<p>
+Se dice que <img src="ltxpng/index_1fa506a35e1915deaf8f0d2ee7aa0555199e9e61.png" class="img-responsive" alt="$F_\alpha$"> es segura si:
+</p>
+
+<p>
+<img src="ltxpng/index_cff581cedcf38eb4b2b1ba71f01e196bc074b558.png" class="img-responsive" alt="$$\forall \lambda, \lambda \in D_\alpha, \gamma(F_\alpha(\lambda)) \supseteq F^*_P(\gamma(\lambda))$$">
+</p>
+
+<p>
+Por ejemplo: Sea <img src="ltxpng/index_96924b22da3441d5a98ac499a53d8d1f478d1ea5.png" class="img-responsive" alt="$P = (y := x * -3)$"> un programa con entrada <img src="ltxpng/index_3773bfa0a05421f0f67e6c4791a370dbe60310e2.png" class="img-responsive" alt="$x$"> y salida <img src="ltxpng/index_f4b063b0f80936b36f97c50c99cf1c25baca9522.png" class="img-responsive" alt="$y$">. 
+Entonces la función que representa a este programa concreto es <img src="ltxpng/index_f6c0cff775cb5cb856c1a80f25b834915a2e5713.png" class="img-responsive" alt="$F_P = x * -3$">.
+Abstrayéndolo con la función de significado abstracto se obtiene <img src="ltxpng/index_27ee60b17c8aecc590995774928cc1717a78ddd1.png" class="img-responsive" alt="$F_\alpha = x *_\alpha [-]$"> donde <img src="ltxpng/index_5c918963d5dcf3508c4481fcda5a2a7ad980a32a.png" class="img-responsive" alt="$*_\alpha$"> es la operación abstracta de los signos definida en los ejemplos anteriores.
+</p>
+
+<p>
+Si el programa tiene como entrada un número positivo (<img src="ltxpng/index_64a871fbc878802d59d91f9d55296dcaee414135.png" class="img-responsive" alt="$F_P(x) : x &amp;gt; 0$"> abstrayéndolo resulta en <img src="ltxpng/index_15bd4022ae3a90e36f74c35234553299a0ce5d42.png" class="img-responsive" alt="$F_\alpha([+])$">), entonces se obtiene: <img src="ltxpng/index_f8e10f9591424dcf766b9e6699508f018a29ac9e.png" class="img-responsive" alt="$F_\alpha([+]) = [+] *_\alpha [-] = [-]$">.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> Semánticas colectoras</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+La semántica I/O que se viene tratando es muy escueta. El análisis de semánticas extendidas se basa en deducir información sobre el estado en los puntos de programa (<i>fixedpoints</i>). Pero diferentes puntos de programa pueden alcanzarse bajo diferentes estados y desde diferentes puntos. Por ello, se necesita calcular una colección semántica de estados abstractos para un punto de programa.
+</p>
+
+<p>
+"Resumir" la semántica colectora (<i>collecting semantics</i>) sería más eficiente. Para ello se puede utilizar la estructura de retículo (<i>lattice</i>) en el dominio abstracto.
+</p>
+</div>
+
+
+<div id="outline-container-sec-3-6-1" class="outline-4">
+<h4 id="sec-3-6-1"><span class="section-number-4">3.6.1</span> Estructura de Retículo</h4>
+<div class="outline-text-4" id="text-3-6-1">
+<p>
+Se puede estrablecer una operación de orden &le;_&alpha; sobre el dominio abstracto D_&alpha;. Si <img src="ltxpng/index_5a17fa7780fda2977e8569a5b9eb30ece7de5b9a.png" class="img-responsive" alt="$(D_\alpha, \le_\alpha)$"> es un retículo completo, entonces para todo <img src="ltxpng/index_d8fa9b8599f35e9d45d7583bb5a288c9a276107e.png" class="img-responsive" alt="$S \subseteq D_\alpha$">, existe un único mínimo límite superior <img src="ltxpng/index_82a48443b88a89a7efcf72ed2277b096aa54c324.png" class="img-responsive" alt="$\sqcup S \in D_\alpha$">. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> Inserción de Galois</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+Sea:
+</p>
+<ul class="org-ul">
+<li>D y D_&alpha; retículos completos
+</li>
+<li><img src="ltxpng/index_3bdf3a5b94afe9a65ada1c7685b5399b453df119.png" class="img-responsive" alt="$\gamma : D_\alpha \to D$"> una función monótona de concretización.
+</li>
+<li><img src="ltxpng/index_a9f660c4cd8551843569a06e0dcf05e83859b35b.png" class="img-responsive" alt="$\alpha : D \to D_alpha$"> una función monótona de abstracción.
+</li>
+</ul>
+
+<p>
+La estructura <img src="ltxpng/index_c5739c013db1dd677910c8e2a89bc4be019a88cb.png" class="img-responsive" alt="$(D_\alpha, \gamma, D, \alpha)$"> se denomina <b>inserción de Galois</b> si cumple con lo siguiente:
+</p>
+
+<ul class="org-ul">
+<li><img src="ltxpng/index_a8671c9f19770bfbbc1ca84ac7e03af898f4988e.png" class="img-responsive" alt="$\forall \lambda \in D_\alpha . \lambda = \alpha(\gamma(\lambda))$">
+</li>
+<li><img src="ltxpng/index_d860a9e96af43001d562f44470ca6080d173f46e.png" class="img-responsive" alt="$\forall d \in D . d \subseteq \gamma(\alpha(d))$">
+</li>
+</ul>
+</div>
+
+<div id="outline-container-sec-3-7-1" class="outline-4">
+<h4 id="sec-3-7-1"><span class="section-number-4">3.7.1</span> Aproximación Segura</h4>
+<div class="outline-text-4" id="text-3-7-1">
+<p>
+Sea una inserción de Galois <img src="ltxpng/index_c5739c013db1dd677910c8e2a89bc4be019a88cb.png" class="img-responsive" alt="$(D_\alpha, \gamma, D, \alpha)$">. Se dice que <img src="ltxpng/index_60b6dce95e1aefad4483a618b0ddee1042f33c12.png" class="img-responsive" alt="$\lambda \in D_\alpha$"> se aproxima de forma segura a <img src="ltxpng/index_f5e4c0742284571f24fba8d2b9264943a64bbda5.png" class="img-responsive" alt="$d \in D$"> sssi <img src="ltxpng/index_d209a711e4e593cd93aa0639962addd6c8f99ee4.png" class="img-responsive" alt="$d \subseteq \gamma(\lambda)$">.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-7-2" class="outline-4">
+<h4 id="sec-3-7-2"><span class="section-number-4">3.7.2</span> Teorema fundamental</h4>
+<div class="outline-text-4" id="text-3-7-2">
+<p>
+Dada una inserción de Galois <img src="ltxpng/index_c5739c013db1dd677910c8e2a89bc4be019a88cb.png" class="img-responsive" alt="$(D_\alpha, \gamma, D, \alpha)$"> y dos funciones monótonas <img src="ltxpng/index_99c36773d8b2a34a20ddc9779d55dbbc8038fd37.png" class="img-responsive" alt="$F : D \to D$"> y <img src="ltxpng/index_29f1b0094cf4ca94080ba9a4c3fe3e38783697b0.png" class="img-responsive" alt="$F_\alpha : D_\alpha \to D_\alpha$">.
+</p>
+
+<p>
+Si F_&alpha; es una aproximación de F entonces lfp(F_&alpha;) es una aproximación de lfp(F).
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Semántica de Punto Fijo</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Definiciones</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>Un lenguaje de primer orden <img src="ltxpng/index_a6405fcb599d4a4f44ee7b27d79d87bcf1805351.png" class="img-responsive" alt="$L$">, asociado a un programa <img src="ltxpng/index_a2b343fe2a09ba18dca7d2a770594ba330ad2b96.png" class="img-responsive" alt="$P$">.
+</li>
+<li>Sea <img src="ltxpng/index_5951449f7407819fe1197e72bfe8b3f5b414d19d.png" class="img-responsive" alt="$U$"> el Universo de Herbrand.
+</li>
+<li>Sea <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$"> la sa Base de Herbrand.
+</li>
+<li>Una Interpretación de Herbrand es un subconjunto de <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$">.
+</li>
+<li>Sea <img src="ltxpng/index_2c22f477e59e4c40702072a716a680f53b0e0a50.png" class="img-responsive" alt="$I$"> es el conjunto de todas las interpretaciones de Herbrand.
+</li>
+<li>Un Modelo de Herbrand es una interpretación de Herbrand que contiene todas las consecuencias del programa.
+</li>
+<li>Sea <img src="ltxpng/index_ca7b3fdaf7b753fd858532cf1db59b16109fb961.png" class="img-responsive" alt="$T_P : I \to I$"> el operador de consecuencia inmediata. Está definido por 
+</li>
+</ul>
+<p>
+<img src="ltxpng/index_9dbf1f7455fdc14ce8ab500569237c7baf8e4133.png" class="img-responsive" alt="$$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$">
+</p>
+<ul class="org-ul">
+<li><img src="ltxpng/index_a3d92f5d1e0cb774faf407eb01d9f3d5c4a24490.png" class="img-responsive" alt="$T_P \uparrow \omega$"> es procedimiento para obtener el mínimo punto fijo comenzando desde <img src="ltxpng/index_5bdbc4759901be3e0f3ffa3f6b66c3c1a3dbe7bb.png" class="img-responsive" alt="$\omega = 1$">.
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Ejemplo</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Sea el siguiente programa P:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-prolog"><span style="color: #88C0D0;">p</span>(f(<span style="color: #D8DEE9;">X</span>)) :- p(<span style="color: #D8DEE9;">X</span>).
+<span style="color: #88C0D0;">p</span>(a).
+<span style="color: #88C0D0;">q</span>(a).
+<span style="color: #88C0D0;">q</span>(b).
+</pre>
+</div>
+
+<p>
+Escrito formalmente:
+<img src="ltxpng/index_0698589b558c27e55982fa302f6aa6ae1baa974f.png" class="img-responsive" alt="$P = \{ p(f(X)) \leftarrow p(X). p(a). q(a). q(b). \}$">
+</p>
+
+<p>
+El Universo de Herbrand es:
+<img src="ltxpng/index_e4fa63b7e7a36a83e88acec2f5056a5fc6b080f8.png" class="img-responsive" alt="$$U = \{ a,b,f(a),f(b),f(f(a)),f(f(b)),\ldots \}$$">
+</p>
+
+<p>
+La Base de Herbrand es:
+<img src="ltxpng/index_4f3072ec9ee965d62b04f48fe0d9cd97dedc26e1.png" class="img-responsive" alt="$$B = \{ p(a),p(b),q(a),q(b),p(f(a)),p(f(b)),p(f(f(a))), p(f(f(b))), q(f(a))\ldots \}$$">
+</p>
+
+<p>
+El conjunto de todas las interpretaciones de Herbrand es:
+<img src="ltxpng/index_afac7ae4a00823b752db058a7a02be9ec08cf201.png" class="img-responsive" alt="$$I = \mbox{ todos los subconjuntos de } B$$">
+</p>
+
+<p>
+Un modelo de Herbrand es:
+<img src="ltxpng/index_ebae9d6b8382ae3ac261774af6f210aa4d1f4558.png" class="img-responsive" alt="$$H = \{ q(a), q(b), p(a), p(f(a)), p(f(f(a))), \ldots \}$$">
+</p>
+
+<p>
+El procedimiento para obtener el mínimo punto fijo es:
+</p>
+
+<figure>
+<p><img src="ltxpng/index_e773ef3092930e31f14fc444b966941458cd7361.png" class="img-responsive" alt="\begin{align*}
+T_P \uparrow 0 &amp;amp;= \{ p(a),q(a),q(b) \}\\
+T_P \uparrow 1 &amp;amp;= \{ p(a),q(a),q(b),p(f(a)) \} \\
+T_P \uparrow 2 &amp;amp;= \{ p(a),q(a),q(b),p(f(a)),p(f(f(a))) \} \\
+\ldots \\
+T_P \uparrow \omega &amp;amp;= H
+\end{align*}      
+"></p>
+</figure>
+</div>
+</div>
+
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Interpretación abstracta "Bottom Up"</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Aplicar la interpretación abstracta consiste en definir lo siguiente:
+</p>
+
+<ul class="org-ul">
+<li>Un dominio abstracto: I^&alpha;
+<ul class="org-ul">
+<li>donde sus elementos son aproximaciones de elementos de <img src="ltxpng/index_45ea39fa76529eff21441fb90eac356e5adf6020.png" class="img-responsive" alt="$I = \wp(B)$">
+</li>
+</ul>
+</li>
+<li>Función de concretización: &gamma;
+<ul class="org-ul">
+<li><img src="ltxpng/index_9df86b79631f9860e40e7b870ecb0c1a7fb27f05.png" class="img-responsive" alt="$\gamma : I^\alpha \to I$">
+</li>
+</ul>
+</li>
+<li>Función de abstracción: &alpha;
+<ul class="org-ul">
+<li><img src="ltxpng/index_cd03449e612a091a6e26dee6f03ff4676a86814b.png" class="img-responsive" alt="$\alpha : I \to I^\alpha$">
+</li>
+</ul>
+</li>
+<li>Operador abstracto: T^&alpha;_P
+<ul class="org-ul">
+<li>Es la versión abstracta de T_P
+</li>
+<li><img src="ltxpng/index_7f25cff0f0a21dc16671d0d8b5ee34c2f47428b7.png" class="img-responsive" alt="$T^\alpha_P : I^\alpha \to I^\alpha$">
+</li>
+</ul>
+</li>
+<li>Inserción de Galois: <img src="ltxpng/index_6d6f84acb3ec8a6da96a27bbaf1da7d2966e8946.png" class="img-responsive" alt="$(I^\alpha, \gamma, I, \alpha)$">
+</li>
+</ul>
+
+<p>
+Para demostrar exactitud o terminación se debe:
+</p>
+<ul class="org-ul">
+<li>Exactitud:
+<ul class="org-ul">
+<li>I^&alpha; es un retículo completo
+</li>
+<li>I^&alpha; Debe aproximar a <img src="ltxpng/index_50c9e325d86b0026b6c45978e534657f6a105cfc.png" class="img-responsive" alt="$I: \forall M \in I, \gamma(\alpha(M)) \supseteq M$">
+</li>
+<li>T^&alpha;_P es una aproximación segura de T_P
+<ul class="org-ul">
+<li>i.e. <img src="ltxpng/index_57fed31891d82087d1e6f1c7374fc04a05be7a1a.png" class="img-responsive" alt="$\forall d, d \in  I^\alpha, \gamma(T^\alpha_P(d)) \supseteq T_P(\gamma(d))$">
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Terminacion:
+<ul class="org-ul">
+<li>T^&alpha;_P es monótono
+</li>
+<li>I^&alpha; cadena ascendente finita.
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Con esto se puede deducir que <img src="ltxpng/index_646662c533b463dfb105b0780ef92e7b589f60ff.png" class="img-responsive" alt="$H^\alpha = lfp(T^\alpha_P) = T^\alpha_P \uparrow n$"> donde:
+</p>
+<ul class="org-ul">
+<li><img src="ltxpng/index_58199a5456c6af107f6ae48293c635a1c794b09c.png" class="img-responsive" alt="$n$"> es el número de pasos (finito)
+</li>
+<li><img src="ltxpng/index_f64d708628d35e4124669d963106e1933cf531dc.png" class="img-responsive" alt="$H^\alpha$"> aproximará a <img src="ltxpng/index_5b6f0bf7b6c033767d6579998f4d2d430f7d9fb8.png" class="img-responsive" alt="$H$">.
+</li>
+</ul>
+
+<p>
+La Figura <a href="intabs_bottom_up">intabs_bottom_up</a> muestra los elementos indicados anteriormente y la relación entre ellos. Obsérvese la separación entre los dos "dominios" de interpretación e interpretación abstracta y el uso de las funciones de concretización y abstracción para poder "ir y venir" entre ellos.
+</p>
+
+
+<figure>
+<p><img src="imgs/bottomup.png" class="img-responsive" alt="bottomup.png">
+</p>
+<figcaption><span class="figure-number">Figura 5:</span> Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. <a href="fig:intabs_bottom_up">fig:intabs_bottom_up</a></figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -620,7 +953,7 @@ Se puede utilizar el predicado <code>output/0</code> en la consola CiaoPP para o
 <footer id="postamble" class="">
 <div><p class="date">Fecha: 02 oct 2020</p>
 <p class="author">Autor: Christian Gimenez</p>
-<p class="date">Created: 2020-10-04 dom 17:53</p>
+<p class="date">Created: 2020-10-05 lun 18:50</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="http://orgmode.org">Org-mode</a> 9.3.6)</p>
 </div>
 </footer>

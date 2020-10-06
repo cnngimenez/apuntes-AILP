@@ -407,7 +407,7 @@ Si el programa tiene como entrada un número positivo ($F_P(x) : x > 0$ abstray�
 ** Semánticas colectoras
 La semántica I/O que se viene tratando es muy escueta. El análisis de semánticas extendidas se basa en deducir información sobre el estado en los puntos de programa (/fixedpoints/). Pero diferentes puntos de programa pueden alcanzarse bajo diferentes estados y desde diferentes puntos. Por ello, se necesita calcular una colección semántica de estados abstractos para un punto de programa.
 
-"Resumir" la semántica colectora (/collecting semantics/) sería más eficiente. Para ello se puede utilizar la estructura de retículo (/lattice/) en el dominio abstracto.
+Se puede aumentar la eficiencia si se "resume" la semántica recolectada (/collecting semantics/). Para ello se puede utilizar la estructura de retículo (/lattice/) en el dominio abstracto.
 
 
 *** Estructura de Retículo
@@ -431,24 +431,73 @@ Sea una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$. Se dice que $\lamb
 *** Teorema fundamental
 Dada una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$ y dos funciones monótonas $F : D \to D$ y $F_\alpha : D_\alpha \to D_\alpha$.
 
-Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha}) es una aproximación de lfp(F).
+Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha})[fn:1] es una aproximación de lfp(F).
 
-* Semántica de Punto Fijo
+* Análisis de Programas Lógicos
 
-** Definiciones
+#+BEGIN_SRC latex :file imgs/analisis_programas_logicos.png :results link file 
+\begin{tikzpicture}
+  [every annotation/.style={fill=red!20}]
+  
+  \path[mindmap,
+    concept color=black,
+    grow cyclic,
+    text=white,
+    level 1/.append style={sibling angle=80},
+    %% level 2/.append style={sibling distance=1cm},
+    every node/.style={concept}
+  ]
+  %
+  node {Análisis de Programas Lógicos}
+  %
+  child {node {Casos intermedios/misc}}
+  % 
+  child[concept color=blue!50!black] {node (semope) {Semántica operativa}
+    child[concept color=red!20, text=black] {node {a.k.a. ``Top-Down''}}
+    child {node {De\-no\-ta\-cio\-nal}}
+    child {node {Basada en SLD}
+      child {node {\scriptsize ...}}
+      child {node {\scriptsize Reac\-ti\-vo}}
+      child {node {\scriptsize Pa\-ra\-le\-lo}}
+    }
+  }
+  %
+  child[concept color=green!50!black] {node (semdec) {Semántica declarativa}
+    child[concept color=red!20, text=black] {node {a.k.a. ``Bottom-Up''}}
+    child {node {Semántica de modelos mínimos}}
+    child {node {Semántica de punto fijo}
+      child[concept color=red!20, text=black] {
+        node {\scriptsize ba\-sa\-da en $T_P$}}
+    }
+  };
+
+  \node[annotation, left] at (semdec.west)
+  {\scriptsize Relacionada con las consecuencias lógicas del programa};
+  \node[annotation, above left=0.4cm of semope.north east]
+  {\scriptsize Cercana al comportamiento del programa};
+\end{tikzpicture}
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/analisis_programas_logicos.png]]
+
+** Semántica de Punto Fijo
+*** Definiciones
 - Un lenguaje de primer orden $L$, asociado a un programa $P$.
-- Sea $U$ el Universo de Herbrand.
-- Sea $B$ la sa Base de Herbrand.
-- Una Interpretación de Herbrand es un subconjunto de $B$.
-- Sea $I$ es el conjunto de todas las interpretaciones de Herbrand.
-- Un Modelo de Herbrand es una interpretación de Herbrand que contiene todas las consecuencias del programa.
-- Sea $T_P : I \to I$ el operador de consecuencia inmediata. Está definido por 
+- Sea $U$ el *Universo de Herbrand*.
+- Sea $B$ la sa *Base de Herbrand*.
+- Una *Interpretación de Herbrand* es un subconjunto de $B$.
+- Sea $I$ es el *conjunto de todas las interpretaciones* de Herbrand.
+- Un *Modelo de Herbrand* es una interpretación de Herbrand que contiene todas las consecuencias del programa.
+- Sea $T_P : I \to I$ el *operador de consecuencia inmediata*. Está definido por 
 $$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$
-- $T_P \uparrow \omega$ es procedimiento para obtener el mínimo punto fijo comenzando desde $\omega = 1$.
+- $T_P \uparrow \omega$ es el procedimiento para obtener el mínimo punto fijo comenzando desde $\omega = 1$.
 
 Observar que la definición de T_{P} depende del programa P.
+
+Considerar $ground(P)$ como el conjunto de todos los términos instanciados de P.
  
-** Ejemplo
+*** Ejemplo
 Sea el siguiente programa P:
 
 #+begin_src ciao
@@ -482,8 +531,9 @@ T_P \uparrow 2 &= \{ p(a),q(a),q(b),p(f(a)),p(f(f(a))) \} \\
 T_P \uparrow \omega &= H
 \end{align*}      
 
+Como consecuencia T_{P} \uparrow \omega obtiene todas las consecuencias lógicas del programa.
 
-** Interpretación abstracta "Bottom Up"
+*** Interpretación abstracta "Bottom Up"
 Aplicar la interpretación abstracta consiste en definir lo siguiente:
 
 - Un dominio abstracto: I^{\alpha}
@@ -518,6 +568,10 @@ La Figura ref:intabs_bottom_up muestra los elementos indicados anteriormente y l
 #+caption: Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. label:fig:intabs_bottom_up
 [[file:imgs/bottomup.png]]
 
+
+* Footnotes
+
+[fn:1] lfp significa /least fixed point/. gfp significa /greatest fixed point/.
 * Meta     :noexport:
 
   # ----------------------------------------------------------------------

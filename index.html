@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <title>Apuntes del Curso Análisis Estático de Programas Lógicos</title>
-<!-- 2020-10-05 lun 20:01 -->
+<!-- 2020-10-06 mar 17:21 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Org-mode">
@@ -236,11 +236,15 @@ $(function() {
 </li>
 </ul>
 </li>
-<li><a href="#sec-4">4. Semántica de Punto Fijo</a>
+<li><a href="#sec-4">4. Análisis de Programas Lógicos</a>
 <ul class="nav">
-<li><a href="#sec-4-1">4.1. Definiciones</a></li>
-<li><a href="#sec-4-2">4.2. Ejemplo</a></li>
-<li><a href="#sec-4-3">4.3. Interpretación abstracta "Bottom Up"</a></li>
+<li><a href="#sec-4-1">4.1. Semántica de Punto Fijo</a>
+<ul class="nav">
+<li><a href="#sec-4-1-1">4.1.1. Definiciones</a></li>
+<li><a href="#sec-4-1-2">4.1.2. Ejemplo</a></li>
+<li><a href="#sec-4-1-3">4.1.3. Interpretación abstracta "Bottom Up"</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -276,6 +280,10 @@ This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa
 Este obra está bajo una <a href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.
 </p>
 
+
+<p>
+Los mismos términos utilizados en Ciao Prolog (definiciones de term, atom, predicate, etc.) también se pueden encontrar en el <a href="https://www.swi-prolog.org/pldoc/man?section=glossary">glosario de SWI-Prolog</a>.
+</p>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> Aserciones</h2>
@@ -487,12 +495,40 @@ Si <code>[pred]</code> o <code>[: precond]</code> no se cumple, no se chequea la
 </table>
 
 <p>
-Más información en <a href="ciao#The Ciao assertion language">info:ciao#The Ciao assertion language</a>.
+<code>test</code> no se verifica con CiaoPP porque no trabaja con dominios abstractos.
 </p>
 
 <p>
-<code>test</code> no se verifica con CiaoPP porque no trabaja con dominios abstractos.
+Más información en los manuales de info (en Emacs posicionar el cursor sobre un link y presionar <code>C-c C-o</code>).
 </p>
+
+<ul class="org-ul">
+<li>Aserciones: <a href="ciao#The Ciao assertion language">info:ciao#The Ciao assertion language</a>.
+</li>
+<li>Tipos de datos básicos y propiedades: <a href="ciao#Basic data types and properties">info:ciao#Basic data types and properties</a> (predicados como <code>term/1, atm/1, list/1, list/2, num/1</code>, etc.).
+</li>
+<li>Aserciones de computabilidad: <a href="ciao#Properties which are native to analyzers">ciao#Properties which are native to analyzers</a>.
+</li>
+<li>Explicación de los tipos regulares: <a href="ciao#Declaring regular types">info:ciao#Declaring regular types</a>.
+</li>
+<li>Sintaxis para la documentation con PlDoc: <a href="ciao#Documentation comments">info:ciao#Documentation comments</a>.
+</li>
+</ul>
+
+<p>
+Módulos a utilizar:
+</p>
+
+<ul class="org-ul">
+<li><code>assertions</code>
+</li>
+<li><code>regtypes</code>
+</li>
+<li><code>nativeprops</code>
+</li>
+<li><code>basic_props</code> (este módulo es importado automáticamente con <code>assertions</code>)
+</li>
+</ul>
 </div>
 
 <div id="outline-container-sec-1-1-1" class="outline-4">
@@ -509,15 +545,14 @@ Es equivalente a lo siguiente:
 
 <div class="org-src-container">
 
-<pre class="src src-prolog">:- calls qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>), var(<span style="color: #D8DEE9;">B</span>)).
-:- success qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>), var(<span style="color: #D8DEE9;">B</span>)) =&gt; list(<span style="color: #D8DEE9;">B</span>).
-:- comp qsort(<span style="color: #D8DEE9;">A</span>,<span style="color: #D8DEE9;">B</span>) : (list(<span style="color: #D8DEE9;">A</span>) , var(<span style="color: #D8DEE9;">B</span>)) + not_fails.
+<pre class="src src-ciao"><span style="color: #1e90ff; font-weight: bold;">:- calls</span> qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)).
+<span style="color: #1e90ff; font-weight: bold;">:- success</span> qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>), var(<span style="color: #eedd82;">B</span>)) <span style="color: #ff7f50; font-weight: bold;">=&gt;</span> list(<span style="color: #eedd82;">B</span>).
+<span style="color: #1e90ff; font-weight: bold;">:- comp</span> qsort(<span style="color: #eedd82;">A</span>,<span style="color: #eedd82;">B</span>) : (list(<span style="color: #eedd82;">A</span>) , var(<span style="color: #eedd82;">B</span>)) + not_fails.
 </pre>
 </div>
 </div>
 </div>
 </div>
-
 
 <div id="outline-container-sec-1-2" class="outline-3">
 <h3 id="sec-1-2"><span class="section-number-3">1.2</span> regtype</h3>
@@ -536,18 +571,61 @@ Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para 
 
 <div class="org-src-container">
 
-<pre class="src src-prolog">:- <span style="color: #81A1C1;">module</span>(aut, <span style="color: #D8DEE9;">_</span>, <span style="color: #81A1C1;">[</span>assertions, regtypes<span style="color: #81A1C1;">]</span>).
+<pre class="src src-ciao"><span style="color: #9f79ee; font-weight: bold;">:- module</span>(aut, <span style="color: #eedd82;">_</span>, [assertions, regtypes]).
 
-:- entry accepts_(<span style="color: #D8DEE9;">S</span>,<span style="color: #D8DEE9;">C</span>) : (initial(<span style="color: #D8DEE9;">S</span>), list(car, <span style="color: #D8DEE9;">C</span>)).
-:- regtype <span style="color: #88C0D0;">car/1</span>.
+<span style="color: #a52a2a; font-weight: bold;">:- entry</span> accepts_(<span style="color: #eedd82;">S</span>,<span style="color: #eedd82;">C</span>) : (initial(<span style="color: #eedd82;">S</span>), list(car, <span style="color: #eedd82;">C</span>)).
+<span style="color: #1e90ff; font-weight: bold;">:- regtype</span> car/1.
 
-<span style="color: #88C0D0;">car</span>(a).
-<span style="color: #88C0D0;">car</span>(b).
+<span style="color: #87cefa;">car</span>(a).
+<span style="color: #87cefa;">car</span>(b).
 
-<span style="color: #616e88;">%% </span><span style="color: #616e88;">...</span>
-<span style="color: #88C0D0;">accepts_</span>(<span style="color: #D8DEE9;">State</span>, <span style="color: #81A1C1;">[]</span>) :-
-    final(<span style="color: #D8DEE9;">State</span>).
-<span style="color: #616e88;">%% </span><span style="color: #616e88;">...</span>
+<span style="color: #6c7b8b;">%% ...</span>
+<span style="color: #87cefa;">accepts_</span>(<span style="color: #eedd82;">State</span>, []) <span style="color: #ff7f50; font-weight: bold;">:-</span>
+    final(<span style="color: #eedd82;">State</span>).
+<span style="color: #6c7b8b;">%% ...</span>
+</pre>
+</div>
+
+<p>
+El analizador de código de CiaoPP puede generar nuevos regtypes para declarar nuevos dominios. Por ejemplo, en el siguiente código se generan dos regtypes, <code>rt4/1</code> y <code>rt5/1</code> definiendo los dominios de las dos variables de <code>te/2</code>. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ciao"><span style="color: #9f79ee; font-weight: bold;">:- module</span>(app, <span style="color: #eedd82;">_</span>, [assertions, nativeprops]).
+
+<span style="color: #87cefa;">te</span>(1, <span style="color: #ffa07a;">"hello"</span>).
+<span style="color: #87cefa;">te</span>(0, 0).
+</pre>
+</div>
+
+<p>
+La salida del analizador es la siguiente:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ciao"><span style="color: #9f79ee; font-weight: bold;">:- module</span>(<span style="color: #eedd82;">_1</span>,<span style="color: #eedd82;">_2</span>,[assertions,nativeprops,regtypes]).
+
+<span style="color: #1e90ff; font-weight: bold;">:- </span><span style="color: #32cd32; font-weight: bold;">true</span><span style="color: #1e90ff; font-weight: bold;"> pred</span> te(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>)
+   : ( term(<span style="color: #eedd82;">_A</span>), term(<span style="color: #eedd82;">_B</span>) )
+   <span style="color: #ff7f50; font-weight: bold;">=&gt;</span> ( rt4(<span style="color: #eedd82;">_A</span>), rt5(<span style="color: #eedd82;">_B</span>) ).
+
+<span style="color: #1e90ff; font-weight: bold;">:- </span><span style="color: #32cd32; font-weight: bold;">true</span><span style="color: #1e90ff; font-weight: bold;"> pred</span> te(<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>)
+   : mshare([[<span style="color: #eedd82;">_A</span>],[<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>],[<span style="color: #eedd82;">_B</span>]])
+   <span style="color: #ff7f50; font-weight: bold;">=&gt;</span> ground([<span style="color: #eedd82;">_A</span>,<span style="color: #eedd82;">_B</span>]).
+
+<span style="color: #87cefa;">te</span>(1,<span style="color: #ffa07a;">"hello"</span>).
+<span style="color: #87cefa;">te</span>(0,0).
+
+
+<span style="color: #1e90ff; font-weight: bold;">:- regtype</span> rt4/1.
+<span style="color: #87cefa;">rt4</span>(0).
+<span style="color: #87cefa;">rt4</span>(1).
+
+<span style="color: #1e90ff; font-weight: bold;">:- regtype</span> rt5/1.
+<span style="color: #87cefa;">rt5</span>(0).
+<span style="color: #87cefa;">rt5</span>([104,101,108,108,111]).
 </pre>
 </div>
 </div>
@@ -563,7 +641,7 @@ Varios de los predicados para <code>comp</code> están definidos en el módulo <
 
 <div class="org-src-container">
 
-<pre class="src src-prolog">:- <span style="color: #81A1C1;">module</span>(the_file, <span style="color: #D8DEE9;">_</span>, <span style="color: #81A1C1;">[</span>assertions, nativeprops<span style="color: #81A1C1;">]</span>).
+<pre class="src src-ciao"><span style="color: #9f79ee; font-weight: bold;">:- module</span>(the_file, <span style="color: #eedd82;">_</span>, [assertions, nativeprops]).
 </pre>
 </div>
 
@@ -573,11 +651,9 @@ O sino, se puede agregar como módulo:
 
 <div class="org-src-container">
 
-<pre class="src src-prolog">:- use_module(library(assertions/native_props)).
+<pre class="src src-ciao"><span style="color: #9f79ee; font-weight: bold;">:- use_module</span>(library(assertions/native_props)).
 </pre>
 </div>
-
-
 
 <p>
 Más información en: <a href="ciao#Properties which are native to analyzers">info:ciao#Properties which are native to analyzers</a>
@@ -724,7 +800,7 @@ La semántica I/O que se viene tratando es muy escueta. El análisis de semánti
 </p>
 
 <p>
-"Resumir" la semántica colectora (<i>collecting semantics</i>) sería más eficiente. Para ello se puede utilizar la estructura de retículo (<i>lattice</i>) en el dominio abstracto.
+Se puede aumentar la eficiencia si se "resume" la semántica recolectada (<i>collecting semantics</i>). Para ello se puede utilizar la estructura de retículo (<i>lattice</i>) en el dominio abstracto.
 </p>
 </div>
 
@@ -783,7 +859,7 @@ Dada una inserción de Galois <img src="ltxpng/index_c5739c013db1dd677910c8e2a89
 </p>
 
 <p>
-Si F<sub>&alpha;</sub> es una aproximación de F entonces lfp(F<sub>&alpha;</sub>) es una aproximación de lfp(F).
+Si F<sub>&alpha;</sub> es una aproximación de F entonces lfp(F<sub>&alpha;</sub>)<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup> es una aproximación de lfp(F).
 </p>
 </div>
 </div>
@@ -791,54 +867,68 @@ Si F<sub>&alpha;</sub> es una aproximación de F entonces lfp(F<sub>&alpha;</sub
 </div>
 
 <div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Semántica de Punto Fijo</h2>
+<h2 id="sec-4"><span class="section-number-2">4</span> Análisis de Programas Lógicos</h2>
 <div class="outline-text-2" id="text-4">
-</div><div id="outline-container-sec-4-1" class="outline-3">
-<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Definiciones</h3>
+
+<figure>
+<p><img src="imgs/analisis_programas_logicos.png" class="img-responsive" alt="analisis_programas_logicos.png">
+</p>
+</figure>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Semántica de Punto Fijo</h3>
 <div class="outline-text-3" id="text-4-1">
+</div><div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> Definiciones</h4>
+<div class="outline-text-4" id="text-4-1-1">
 <ul class="org-ul">
 <li>Un lenguaje de primer orden <img src="ltxpng/index_a6405fcb599d4a4f44ee7b27d79d87bcf1805351.png" class="img-responsive" alt="$L$">, asociado a un programa <img src="ltxpng/index_a2b343fe2a09ba18dca7d2a770594ba330ad2b96.png" class="img-responsive" alt="$P$">.
 </li>
-<li>Sea <img src="ltxpng/index_5951449f7407819fe1197e72bfe8b3f5b414d19d.png" class="img-responsive" alt="$U$"> el Universo de Herbrand.
+<li>Sea <img src="ltxpng/index_5951449f7407819fe1197e72bfe8b3f5b414d19d.png" class="img-responsive" alt="$U$"> el <b>Universo de Herbrand</b>.
 </li>
-<li>Sea <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$"> la sa Base de Herbrand.
+<li>Sea <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$"> la sa <b>Base de Herbrand</b>.
 </li>
-<li>Una Interpretación de Herbrand es un subconjunto de <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$">.
+<li>Una <b>Interpretación de Herbrand</b> es un subconjunto de <img src="ltxpng/index_85b9c5bc6feaef7456f192c2199795eb3bd06187.png" class="img-responsive" alt="$B$">.
 </li>
-<li>Sea <img src="ltxpng/index_2c22f477e59e4c40702072a716a680f53b0e0a50.png" class="img-responsive" alt="$I$"> es el conjunto de todas las interpretaciones de Herbrand.
+<li>Sea <img src="ltxpng/index_2c22f477e59e4c40702072a716a680f53b0e0a50.png" class="img-responsive" alt="$I$"> es el <b>conjunto de todas las interpretaciones</b> de Herbrand.
 </li>
-<li>Un Modelo de Herbrand es una interpretación de Herbrand que contiene todas las consecuencias del programa.
+<li>Un <b>Modelo de Herbrand</b> es una interpretación de Herbrand que contiene todas las consecuencias del programa.
 </li>
-<li>Sea <img src="ltxpng/index_ca7b3fdaf7b753fd858532cf1db59b16109fb961.png" class="img-responsive" alt="$T_P : I \to I$"> el operador de consecuencia inmediata. Está definido por 
+<li>Sea <img src="ltxpng/index_ca7b3fdaf7b753fd858532cf1db59b16109fb961.png" class="img-responsive" alt="$T_P : I \to I$"> el <b>operador de consecuencia inmediata</b>. Está definido por 
 </li>
 </ul>
 <p>
 <img src="ltxpng/index_9dbf1f7455fdc14ce8ab500569237c7baf8e4133.png" class="img-responsive" alt="$$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$">
 </p>
 <ul class="org-ul">
-<li><img src="ltxpng/index_a3d92f5d1e0cb774faf407eb01d9f3d5c4a24490.png" class="img-responsive" alt="$T_P \uparrow \omega$"> es procedimiento para obtener el mínimo punto fijo comenzando desde <img src="ltxpng/index_5bdbc4759901be3e0f3ffa3f6b66c3c1a3dbe7bb.png" class="img-responsive" alt="$\omega = 1$">.
+<li><img src="ltxpng/index_a3d92f5d1e0cb774faf407eb01d9f3d5c4a24490.png" class="img-responsive" alt="$T_P \uparrow \omega$"> es el procedimiento para obtener el mínimo punto fijo comenzando desde <img src="ltxpng/index_5bdbc4759901be3e0f3ffa3f6b66c3c1a3dbe7bb.png" class="img-responsive" alt="$\omega = 1$">.
 </li>
 </ul>
 
 <p>
 Observar que la definición de T<sub>P</sub> depende del programa P.
 </p>
+
+<p>
+Considerar <img src="ltxpng/index_b95b2ce38fa55a7489b17af1bfe83b15c9c966dd.png" class="img-responsive" alt="$ground(P)$"> como el conjunto de todos los términos instanciados de P.
+</p>
 </div>
 </div>
 
-<div id="outline-container-sec-4-2" class="outline-3">
-<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Ejemplo</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> Ejemplo</h4>
+<div class="outline-text-4" id="text-4-1-2">
 <p>
 Sea el siguiente programa P:
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-prolog"><span style="color: #88C0D0;">p</span>(f(<span style="color: #D8DEE9;">X</span>)) :- p(<span style="color: #D8DEE9;">X</span>).
-<span style="color: #88C0D0;">p</span>(a).
-<span style="color: #88C0D0;">q</span>(a).
-<span style="color: #88C0D0;">q</span>(b).
+<pre class="src src-ciao"><span style="color: #87cefa;">p</span>(f(<span style="color: #eedd82;">X</span>)) <span style="color: #ff7f50; font-weight: bold;">:-</span> p(<span style="color: #eedd82;">X</span>).
+<span style="color: #87cefa;">p</span>(a).
+<span style="color: #87cefa;">q</span>(a).
+<span style="color: #87cefa;">q</span>(b).
 </pre>
 </div>
 
@@ -881,13 +971,16 @@ T_P \uparrow \omega &amp;amp;= H
 \end{align*}      
 "></p>
 </figure>
+
+<p>
+Como consecuencia T<sub>P</sub> &uarr; &omega; obtiene todas las consecuencias lógicas del programa.
+</p>
 </div>
 </div>
 
-
-<div id="outline-container-sec-4-3" class="outline-3">
-<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Interpretación abstracta "Bottom Up"</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-sec-4-1-3" class="outline-4">
+<h4 id="sec-4-1-3"><span class="section-number-4">4.1.3</span> Interpretación abstracta "Bottom Up"</h4>
+<div class="outline-text-4" id="text-4-1-3">
 <p>
 Aplicar la interpretación abstracta consiste en definir lo siguiente:
 </p>
@@ -973,16 +1066,27 @@ La Figura <a href="intabs_bottom_up">intabs_bottom_up</a> muestra los elementos 
 <figure>
 <p><img src="imgs/bottomup.png" class="img-responsive" alt="bottomup.png">
 </p>
-<figcaption><span class="figure-number">Figura 5:</span> Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. <a href="fig:intabs_bottom_up">fig:intabs_bottom_up</a></figcaption>
+<figcaption><span class="figure-number">Figura 6:</span> Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. <a href="fig:intabs_bottom_up">fig:intabs_bottom_up</a></figcaption>
 </figure>
 </div>
 </div>
 </div>
-</div></div></div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Nota al pie de p&aacute;gina: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+lfp significa <i>least fixed point</i>. gfp significa <i>greatest fixed point</i>.
+</p></div>
+
+
+</div>
+</div></div></div></div>
 <footer id="postamble" class="">
 <div><p class="date">Fecha: 02 oct 2020</p>
 <p class="author">Autor: Christian Gimenez</p>
-<p class="date">Created: 2020-10-05 lun 20:01</p>
+<p class="date">Created: 2020-10-06 mar 17:21</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="http://orgmode.org">Org-mode</a> 9.3.6)</p>
 </div>
 </footer>

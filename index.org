@@ -371,7 +371,7 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 
 
 ** Función de concretización 
-Sea D_{\alpha} un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha → \wp(D)$ es la función de concretización.
+Sea D_{\alpha} un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha \to \wp(D)$ es la función de concretización.
 
 Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede definir a \gamma como sigue:
 
@@ -508,21 +508,27 @@ q(b).
 #+END_SRC
 
 Escrito formalmente:
+
 $P = \{ p(f(X)) \leftarrow p(X). p(a). q(a). q(b). \}$
 
 El Universo de Herbrand es:
+
 $$U = \{ a,b,f(a),f(b),f(f(a)),f(f(b)),\ldots \}$$
 
 La Base de Herbrand es:
+
 $$B = \{ p(a),p(b),q(a),q(b),p(f(a)),p(f(b)),p(f(f(a))), p(f(f(b))), q(f(a))\ldots \}$$
 
 El conjunto de todas las interpretaciones de Herbrand es:
+
 $$I = \mbox{ todos los subconjuntos de } B$$
 
 Un modelo de Herbrand es:
+
 $$H = \{ q(a), q(b), p(a), p(f(a)), p(f(f(a))), \ldots \}$$
 
 El procedimiento para obtener el mínimo punto fijo es:
+
 \begin{align*}
 T_P \uparrow 0 &= \{ p(a),q(a),q(b) \}\\
 T_P \uparrow 1 &= \{ p(a),q(a),q(b),p(f(a)) \} \\
@@ -568,6 +574,137 @@ La Figura ref:intabs_bottom_up muestra los elementos indicados anteriormente y l
 #+caption: Relación entre los elementos relevantes de la interpretación abstracta Bottom-Up. label:fig:intabs_bottom_up
 [[file:imgs/bottomup.png]]
 
+*** Ejemplo de inferencia de "tipos"
+
+Sea el siguiente programa lógico P:
+
+\begin{align*}
+P = \{ & p(f(X)) \leftarrow p(X).\\
+       & p(a).\\
+       & r(X) \leftarrow t(X,Y).\\
+       & q(a).\\
+       & q(b). \}
+\end{align*}
+
+En prolog:
+
+#+BEGIN_SRC ciao
+p(f(X)) :- p(X). 
+p(a). 
+r(X) :- t(X,Y). 
+q(a). 
+q(b).
+#+END_SRC
+
+La representación abstracta de P:
+
+\begin{align*}
+P_\alpha = \{ & p \leftarrow p.\\
+         & p.\\ 
+         & r \leftarrow t.\\
+         & q.\}
+\end{align*}
+
+Sea $B^\alpha = S$ el conjunto de símbolos de predicado en el programa P, se obtiene:
+
+$$S = \{ p/1, q/1, r/1, t/2 \}$$
+
+La función de abstracción $\alpha : I \to S^*$ se define como:
+
+$$\alpha(\{p(a), p(b), q(a)\}) = \{ p/1, q/1 \}$$
+
+La función de concretización $\gamma : S^* \to I$ se define como:
+
+\begin{align*}
+\gamma(\{p/1, q/1\}) & = \{ A \in B \;|\; pred(A) = p/1 \; \vee \; pred(A) = q/1\} \\
+                & = \{p(a), p(b), p(f(a)), p(f(b)),\ldots, q(a), q(b), q(f(a)),\ldots \} 
+\end{align*}
+
+Por consiguiente, la versión abstracta de $T_P$ es $T^\alpha_P : S^* \to S^*$ se obtiene de la siguiente manera:
+
+\begin{align*}
+T^\alpha_P \uparrow 0 &= T^\alpha_P(\emptyset) = \{ p/1, q/1 \} \\
+T^\alpha_P \uparrow 1 &= T^\alpha_P(\{ p/1, q/1 \}) \\
+    &= \{ p/1, q/1 \} \\          
+    &= T^\alpha_P \uparrow 0 = H^\alpha
+\end{align*}
+
+Por consiguiente, los "tipos" de datos deducidos son $\{ p/1, q/1 \} = H^\alpha$. Obsérvese que H^{\alpha} es la aproximación al modelo de Herbrand $H$ (todas las consecuencias lógicas del programa P).
+
+Para utilizar el programa en Ciao Prolog se debe escribir lo siguiente:
+#+BEGIN_SRC ciao
+:- module(_, _, [assertions, nativeprops]).
+
+p(f(X)) :- p(X). 
+p(a). 
+r(X) :- t(X,Y). 
+q(a). 
+q(b).
+
+t(_,_).
+#+END_SRC
+
+El analizador de CiaoPP responde con la siguiente salida:
+
+#+BEGIN_SRC ciao
+:- module(_1,_2,[assertions,nativeprops,regtypes]).
+
+:- true pred p(_A)
+   : term(_A)
+   => rt3(_A).
+
+:- true pred p(_A)
+   : mshare([[_A]])
+   => ground([_A]).
+
+p(f(X)) :-
+    p(X).
+p(a).
+
+:- true pred r(X)
+   : term(X)
+   => term(X).
+
+:- true pred r(X)
+   : mshare([[X]])
+   => mshare([[X]]).
+
+r(X) :-
+    t(X,Y).
+
+:- true pred q(_A)
+   : term(_A)
+   => rt8(_A).
+
+:- true pred q(_A)
+   : mshare([[_A]])
+   => ground([_A]).
+
+q(a).
+q(b).
+
+:- true pred t(_1,_2)
+   : ( term(_1), term(_2) )
+   => ( term(_1), term(_2) ).
+
+:- true pred t(_1,_2)
+   : mshare([[_1],[_1,_2],[_2]])
+   => mshare([[_1],[_1,_2],[_2]]).
+
+t(_1,_2).
+
+
+:- regtype rt3/1.
+rt3(a).
+rt3(f(A)) :-
+    rt3(A).
+
+:- regtype rt8/1.
+rt8(a).
+rt8(b).
+#+END_SRC
+
+En congruencia con los resultados de $H^\alpha$ planteados anteriormente, el analizador generó dos declaraciones de ~regtype~ denominadas ~rt3/1~ y ~rt8/1~. Al observarse los valores, se puede deducir que ~rt3/1~ corresponde con los de ~p/1~ y ~rt8/1~ con los de ~q/1~. 
 
 * Footnotes
 

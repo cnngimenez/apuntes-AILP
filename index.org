@@ -12,6 +12,8 @@ This work is licensed under a [[http://creativecommons.org/licenses/by-sa/4.0/][
 Este obra está bajo una [[http://creativecommons.org/licenses/by-sa/4.0/][licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional]].
 
 
+Los mismos términos utilizados en Ciao Prolog (definiciones de term, atom, predicate, etc.) también se pueden encontrar en el [[https://www.swi-prolog.org/pldoc/man?section=glossary][glosario de SWI-Prolog]].
+
 * Aserciones
 
 ** Formato
@@ -73,9 +75,22 @@ Si ~[pred]~ o ~[: precond]~ no se cumple, no se chequea la postcondición ni al 
 |----------+--------------------------------------------------+----|
 | test     | Testeo con instancias. Similar a success.        |    |
 
-Más información en [[info:ciao#The Ciao assertion language][info:ciao#The Ciao assertion language]].
-
 ~test~ no se verifica con CiaoPP porque no trabaja con dominios abstractos.
+
+Más información en los manuales de info (en Emacs posicionar el cursor sobre un link y presionar ~C-c C-o~).
+
+- Aserciones: [[info:ciao#The Ciao assertion language][info:ciao#The Ciao assertion language]].
+- Tipos de datos básicos y propiedades: [[info:ciao#Basic data types and properties][info:ciao#Basic data types and properties]] (predicados como ~term/1, atm/1, list/1, list/2, num/1~, etc.).
+- Aserciones de computabilidad: [[info:ciao#Properties which are native to analyzers]].
+- Explicación de los tipos regulares: [[info:ciao#Declaring regular types][info:ciao#Declaring regular types]].
+- Sintaxis para la documentation con PlDoc: [[info:ciao#Documentation comments][info:ciao#Documentation comments]].
+
+Módulos a utilizar:
+
+- ~assertions~
+- ~regtypes~
+- ~nativeprops~
+- ~basic_props~ (este módulo es importado automáticamente con ~assertions~)
 
 *** Azúcares sintácticos
 
@@ -83,12 +98,11 @@ Más información en [[info:ciao#The Ciao assertion language][info:ciao#The Ciao
 
 Es equivalente a lo siguiente:
 
-#+BEGIN_SRC prolog
+#+begin_src ciao
 :- calls qsort(A,B) : (list(A), var(B)).
 :- success qsort(A,B) : (list(A), var(B)) => list(B).
 :- comp qsort(A,B) : (list(A) , var(B)) + not_fails.
 #+END_SRC
-
 
 ** regtype
 Para utilizar ~regtype~, se debe agregar el módulo ~regtypes~. Más información en: [[info:ciao#Declaring regular types][info:ciao#Declaring regular types]].
@@ -97,7 +111,7 @@ Declara como tipos regulares un predicado. En otras palabras, declararía un dom
 
 Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para declarar el tipo ~car/1~ y en el entry se declara que C es una lista con dominio en ~car/1~ y S de tipo ~initial/1~
 
-#+BEGIN_SRC prolog
+#+begin_src ciao
   :- module(aut, _, [assertions, regtypes]).
 
   :- entry accepts_(S,C) : (initial(S), list(car, C)).
@@ -112,21 +126,54 @@ Por ejemplo, en el código del autómata se puede utilizar el tipo regtype para 
   %% ...
 #+END_SRC
 
+El analizador de código de CiaoPP puede generar nuevos regtypes para declarar nuevos dominios. Por ejemplo, en el siguiente código se generan dos regtypes, ~rt4/1~ y ~rt5/1~ definiendo los dominios de las dos variables de ~te/2~. 
+
+#+BEGIN_SRC ciao
+:- module(app, _, [assertions, nativeprops]).
+
+te(1, "hello").
+te(0, 0).
+#+END_SRC
+
+La salida del analizador es la siguiente:
+
+#+BEGIN_SRC ciao
+:- module(_1,_2,[assertions,nativeprops,regtypes]).
+
+:- true pred te(_A,_B)
+   : ( term(_A), term(_B) )
+   => ( rt4(_A), rt5(_B) ).
+
+:- true pred te(_A,_B)
+   : mshare([[_A],[_A,_B],[_B]])
+   => ground([_A,_B]).
+
+te(1,"hello").
+te(0,0).
+
+
+:- regtype rt4/1.
+rt4(0).
+rt4(1).
+
+:- regtype rt5/1.
+rt5(0).
+rt5([104,101,108,108,111]).
+#+END_SRC
+
 
 ** comp
 Varios de los predicados para ~comp~ están definidos en el módulo ~assertions/native_pros~. Es necesario incluirlo en el preámbulo ~module~ como ~nativeprops~. Por ejemplo: 
 
-#+BEGIN_SRC prolog
+#+begin_src ciao
 :- module(the_file, _, [assertions, nativeprops]).
 #+END_SRC
 
 O sino, se puede agregar como módulo:
 
-#+BEGIN_SRC prolog
+#+begin_src ciao
 :- use_module(library(assertions/native_props)).
 #+END_SRC
-
-
 
 Más información en: [[info:ciao#Properties which are native to analyzers][info:ciao#Properties which are native to analyzers]]
 
@@ -404,7 +451,7 @@ Observar que la definición de T_{P} depende del programa P.
 ** Ejemplo
 Sea el siguiente programa P:
 
-#+BEGIN_SRC prolog
+#+begin_src ciao
 p(f(X)) :- p(X).
 p(a).
 q(a).

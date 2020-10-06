@@ -745,8 +745,10 @@ En congruencia con los resultados de $H^\alpha$ planteados anteriormente, el ana
   #+HTML_HEAD: <link href="libs/bootstrap.min.css" rel="stylesheet">
   # -- -- LaTeX-CSS
   #+HTML_HEAD: <link href="css/style-org.css" rel="stylesheet">
-
+  
   #+HTML_HEAD: <script src="libs/jquery.min.js"></script> 
+  #+HTML_HEAD: <script src="libs/bootstrap.min.js"></script>
+
   #+HTML_HEAD: <meta name="description" content="Apuntes del curso de Análisis Estático Estático de Programas Lógicos. ">
   #+HTML_HEAD: <meta name="keywords" content="Prolog, Ciao, CiaoPP, Análisis Estático">
   #+LANGUAGE: es

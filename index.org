@@ -267,6 +267,20 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 #+RESULTS:
 [[file:imgs/summary.png]]
 
+Siendo:
+
+- $D$ un dominio concreto.
+- D_{\alpha} la abstracción de dicho dominio.
+- \alpha la función de abstracción.
+- \gamma la función de concretización.
+- $\wp (D)$ es el conjunto partes de $D$. 
+- $F_{P} : D \to D$ es la función concreta que representa al programa $P$
+- $F_\alpha D_\alpha \to D_\alpha$ la función de significado abstracto de una función F_{P}. 
+- $F_{P}^{*} : \wp(D) \to \wp(D) \quad F_P^*(S) = \{F_P(x) | x \in S\}$ es una función dependiente de F_{P} que asigna conjuntos de entradas del programa a conjuntos de salida. 
+- $\lambda \in D_\alpha$ un elemento del dominio abstracto.
+- $d \in D$ un elemento del dominio.
+
+
 ** Propiedades de la interpretación abstracta
 #+BEGIN_SRC latex :file imgs/1.props_interp_abstr.png :results link file 
 \begin{tikzpicture}
@@ -297,7 +311,7 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/propiedades_interpretacion_abstracta.png]]
+[[file:imgs/1.props_interp_abstr.png]]
 
 ** Aproximaciones correctas
 #+BEGIN_SRC latex :file imgs/2.aprox_correctas.png :results link file 
@@ -373,7 +387,7 @@ Se puede utilizar el predicado ~output/0~ en la consola CiaoPP para obtener el a
 ** Función de concretización 
 Sea D_{\alpha} un dominio abstracto y $\wp(D)$ partes de (o "conjunto potencia de") un dominio concreto, se dice que $\gamma : D_\alpha \to \wp(D)$ es la función de concretización.
 
-Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede definir a \gamma como sigue:
+Por ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$. Se puede definir a \gamma de la siguiente manera:
 
 \begin{align*}
 \gamma([-]) &= \{x \in Z \arrowvert x < 0  \} \\
@@ -382,7 +396,7 @@ Ejemplo, sea el dominio abstracto $D_\alpha = \{ [-],[0],[+], \top \}$, se puede
 \gamma(\top) &= Z 
 \end{align*}
 
-Es preciso dar la definición de $\bot$ como sigue: $\gamma(\bot) = \emptyset$.
+Es preciso dar la definición de $\bot$ : $\gamma(\bot) = \emptyset$.
 
 ** Función de abstracción
 Sea D un dominio y D_{\alpha} el dominio abstracto, se define a 
@@ -417,7 +431,7 @@ Se puede estrablecer una operación de orden \le_{\alpha} sobre el dominio abstr
 Sea:
 - D y D_{\alpha} retículos completos
 - $\gamma : D_\alpha \to D$ una función monótona de concretización.
-- $\alpha : D \to D_alpha$ una función monótona de abstracción.
+- $\alpha : D \to D_\alpha$ una función monótona de abstracción.
 
 La estructura $(D_\alpha, \gamma, D, \alpha)$ se denomina *inserción de Galois* si cumple con lo siguiente:
 

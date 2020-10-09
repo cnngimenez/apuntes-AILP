@@ -271,8 +271,8 @@ Siendo:
 
 - $D$ un dominio concreto.
 - D_{\alpha} la abstracción de dicho dominio.
-- \alpha la función de abstracción.
-- \gamma la función de concretización.
+- \alpha la *función de abstracción*.
+- \gamma la *función de concretización*.
 - $\wp (D)$ es el conjunto partes de $D$. 
 - $F_{P} : D \to D$ es la función concreta que representa al programa $P$
 - $F_\alpha D_\alpha \to D_\alpha$ la función de significado abstracto de una función F_{P}. 
@@ -282,6 +282,20 @@ Siendo:
 - $\lamda_r$ resultado/s de la función F_{\alpha}
 - $d_r$ resultado/s de la función F^{*}_{P}.
 
+
+#+begin_quote
+[[file:imgs/absmean.png]]
+
+Considere a \lambda, $d$, \lambda_{r} y $r$ como representaciones o etiquetas y no el conjunto o dato en sí. Léase la línea $d \to \lambda$ usando \alpha de la siguiente manera: "para representar los valores que existen en lo concreto (d) a lo abstracto (\lambda) se utiliza la función de abstracción (\alpha)".
+
+En la zona superior se representa un gráfico similar al de la figura que apunta "Dominio abstracto" en el mapa mental. Se resume en que dado un programa y su datos concretos ($d$) se puede obtener su abstracción con \alpha. Y se puede volver a obtener estos datos concretos utilizando la función \gamma.
+
+En la zona inferior se representa los resultados de aplicar la función que representa al programa sea en abstracto o concreto. 
+
+Del lado derecho, se muestra el programa concreto y al aplicarse la función F^{*}_{P} sobre un conjunto de entradas se obtiene las salidas $r$. 
+
+Del lado izquierdo, se presenta la abstracción \lambda de las entradas, que al aplicarse la función de abstracción F_{\alpha} resulta en \lambda_r. Este resultado, al concretizarse con \gamma se obtiene un superconjunto de los resultados dados en $r$.
+#+end_quote
 
 
 ** Propiedades de la interpretación abstracta

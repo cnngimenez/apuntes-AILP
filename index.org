@@ -330,6 +330,20 @@ Del lado izquierdo, se presenta la abstracción \lambda de las entradas, que al 
 #+RESULTS:
 [[file:imgs/1.props_interp_abstr.png]]
 
+Propiedades:
+
+- Exactitud: La aproximación realizada (el análisis realizado) ¿es lo más exacto posible? ¿se equivoca dentro de lo esperado? ¿no brinda resultados inconsistentes?
+- Terminación: ¿La compilación termina con un resultado?
+- Eficiencia: El tiempo de análisis, ¿es el menor? ¿es finito?
+- Precision: La información obtenida ¿es precisa?¿brinda un buen detalle de información del/de los programa/s?
+- Utilidad: La abstracción, ¿tiene alguna utilidad?. La información que ofrece, ¿vale la pena?
+
+
+#+begin_quote
+- Precisión: Ejemplo: el análisis puede indicarnos que el resultado de un programa es un tipo de dato numérico. Pero sería más preciso si nos indica que es un número positivo. Más aún si indica que es un número positivo y par.
+#+end_quote
+
+
 ** Aproximaciones correctas
 #+BEGIN_SRC latex :file imgs/2.aprox_correctas.png :results link file 
 \begin{tikzpicture}
@@ -398,7 +412,6 @@ Del lado izquierdo, se presenta la abstracción \lambda de las entradas, que al 
 
 #+RESULTS:
 [[file:imgs/2.aprox_correctas.png]]
-
 
 
 ** Función de concretización 

@@ -279,6 +279,9 @@ Siendo:
 - $F_{P}^{*} : \wp(D) \to \wp(D) \quad F_P^*(S) = \{F_P(x) | x \in S\}$ es una función dependiente de F_{P} que asigna conjuntos de entradas del programa a conjuntos de salida. 
 - $\lambda \in D_\alpha$ un elemento del dominio abstracto.
 - $d \in D$ un elemento del dominio.
+- $\lamda_r$ resultado/s de la función F_{\alpha}
+- $d_r$ resultado/s de la función F^{*}_{P}.
+
 
 
 ** Propiedades de la interpretación abstracta
@@ -408,7 +411,7 @@ Ejemplo: $\alpha({1,2,3}) = [+]$
 La función $F_\alpha : D_\alpha \to D_\alpha$ se denomina *función de significado abstracto*.
 
 *** Significado abstracto segura
-Se dice que $F_\alpha$ es segura si:
+Se dice que $F_\alpha$ es *segura* si:
 
 $$\forall \lambda, \lambda \in D_\alpha, \gamma(F_\alpha(\lambda)) \supseteq F^*_P(\gamma(\lambda))$$
 
@@ -427,6 +430,9 @@ Se puede aumentar la eficiencia si se "resume" la semántica recolectada (/colle
 *** Estructura de Retículo
 Se puede estrablecer una operación de orden \le_{\alpha} sobre el dominio abstracto D_{\alpha}. Si $(D_\alpha, \le_\alpha)$ es un retículo completo, entonces para todo $S \subseteq D_\alpha$, existe un único mínimo límite superior $\sqcup S \in D_\alpha$. 
 
+#+begin_center
+El retículo se usa para "resumir" la semántica recolectada de los resultados que se van obteniendo en cada /fixpoint/.
+#+end_center
 ** Inserción de Galois
 Sea:
 - D y D_{\alpha} retículos completos
@@ -438,14 +444,30 @@ La estructura $(D_\alpha, \gamma, D, \alpha)$ se denomina *inserción de Galois*
 - $\forall \lambda \in D_\alpha . \lambda = \alpha(\gamma(\lambda))$
 - $\forall d \in D . d \subseteq \gamma(\alpha(d))$
 
+#+begin_quote
+La primer propiedad significa que si se aplica la concretización sobre un resultado abstracto (ej. números positivos $[+]$), y luego la volvemos a abstraer debe dar el mismo resultado y se mantiene consistente.
+
+La segunda propiedad significa que si se intenta aplicar la abstracción sobre un resultado particular y luego la concretización, el resultado del cual partimos debe estra en el resultado final de \gamma.
+#+end_quote
+
 *** Aproximación Segura
 
 Sea una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$. Se dice que $\lambda \in D_\alpha$ se aproxima de forma segura a $d \in D$ sssi $d \subseteq \gamma(\lambda)$.
+
+#+begin_quote
+Una aproximación es segura si al aplicar la función de concretización sobre un elemento abstracto si d.
+#+end_quote
 
 *** Teorema fundamental
 Dada una inserción de Galois $(D_\alpha, \gamma, D, \alpha)$ y dos funciones monótonas $F : D \to D$ y $F_\alpha : D_\alpha \to D_\alpha$.
 
 Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha})[fn:1] es una aproximación de lfp(F).
+
+#+begin_quote
+El teorema fundamental justifica que la aplicación del $lfp(F_\alpha)$ se refleja dentro de la aplicación de $lfp(F)$.  
+
+En otras palabras aplicar $lfp(F_\alpha)$ refleja/mapea/aproxima a $lfp$ aplicado a la función que representa nuestro programa concreto, ofreciendo seguridad de que la abstracción aún representa nuestro programa.
+#+end_quote
 
 * Análisis de Programas Lógicos
 
@@ -498,13 +520,17 @@ Si F_{\alpha} es una aproximación de F entonces lfp(F_{\alpha})[fn:1] es una ap
 ** Semántica de Punto Fijo
 *** Definiciones
 - Un lenguaje de primer orden $L$, asociado a un programa $P$.
-- Sea $U$ el *Universo de Herbrand*.
-- Sea $B$ la sa *Base de Herbrand*.
+- Sea $U$ el *Universo de Herbrand*: El conjunto de todos los términos básicos de $L$
+- Sea $B$ la sa *Base de Herbrand*: El conjunto de todos los átomos instanciados (/ground/) de $L$.
 - Una *Interpretación de Herbrand* es un subconjunto de $B$.
 - Sea $I$ es el *conjunto de todas las interpretaciones* de Herbrand.
 - Un *Modelo de Herbrand* es una interpretación de Herbrand que contiene todas las consecuencias del programa.
-- Sea $T_P : I \to I$ el *operador de consecuencia inmediata*. Está definido por 
-$$T_P(M) = \{h \in B \vert \exists C \in ground(P), C = h \leftarrow b_1, \ldots, b_n \mbox{ y } b_1, \ldots, b_n \in M\}$$
+- Sea $T_P : I \to I$ el *operador de consecuencia inmediata*. Está definido por:
+\begin{align*}
+T_P(M) =& \{h \in B \vert \exists C \in ground(P) \\
+        & C = h \leftarrow b_1, \ldots, b_n \mbox{ y } \\
+        & b_1, \ldots, b_n \in M\}
+\end{align*}
 - $T_P \uparrow \omega$ es el procedimiento para obtener el mínimo punto fijo comenzando desde $\omega = 1$.
 
 Observar que la definición de T_{P} depende del programa P.
